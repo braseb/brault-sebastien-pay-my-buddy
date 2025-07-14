@@ -38,7 +38,7 @@ public class User {
 				inverseJoinColumns = @JoinColumn(name = "user_connection_id")
 				)
 	List<User> connectionUser = new ArrayList<User>();
-	
+		
 	@OneToMany(fetch = FetchType.LAZY,
 			mappedBy = "userReceiver")
 	private List<Transaction> transactionsReceived;
@@ -46,5 +46,15 @@ public class User {
 	@OneToMany(fetch = FetchType.LAZY,
 			mappedBy = "userSender")
 	private List<Transaction> transactionsSend;
+	
+	public void addConnectionUser(User user) {
+		connectionUser.add(user);
+		//user.getConnectionUser().add(this);
+	}
+	
+	public void removeConnectionUser(User user) {
+		//user.getConnectionUser().remove(this);
+		connectionUser.remove(user);
+	}
 	
 }

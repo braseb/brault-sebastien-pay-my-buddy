@@ -1,6 +1,5 @@
 package com.paymybuddy.app.model;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -18,18 +17,16 @@ import lombok.Data;
 public class Transaction {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
 	
-	@ManyToOne(fetch = FetchType.EAGER,
-				cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "sender_id")
 	private User userSender;
 	
 	
-	@ManyToOne(fetch = FetchType.EAGER,
-				cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "receiver_id")
 	private User userReceiver;
 	

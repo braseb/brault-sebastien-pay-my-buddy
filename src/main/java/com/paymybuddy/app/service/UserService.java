@@ -2,25 +2,119 @@ package com.paymybuddy.app.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.paymybuddy.app.exception.UserAlreadyExistException;
+import com.paymybuddy.app.exception.UserAppendConnectionError;
+import com.paymybuddy.app.exception.UserNotFoundException;
 import com.paymybuddy.app.model.User;
 import com.paymybuddy.app.repository.UserRepository;
+
+import jakarta.transaction.Transactional;
 
 
 @Service
 public class UserService {
+    
+	//private final BCryptPasswordEncoder passwordEncoder;
 	
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private BCryptPasswordEncoder passwordEncoder;
+		
+	
+    /*public UserService(BCryptPasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }*/
+    
+   
 	
 	public Optional<User> getUserById(Integer id){
 		return userRepository.findById(id);
 	}
 	
+	public Optional<User> getUserByEmail(String email){
+		return userRepository.findByEmail(email);
+	}
+	
 	public List<User> getUserWithAmountLessThan(Double amount){
 		return userRepository.findBytransactionsSendAmountLessThan(amount);
+	}
+	
+	public User createUser(User user) {
+		if (userRepository.existsById(user.getId())){
+			throw new UserAlreadyExistException("The user with the email " +  user.getEmail() + " already exist");
+		}
+		
+		return userRepository.save(user);
+		
+	}
+	
+	public User updateUser(User user) {
+		if (userRepository.existsById(user.getId())){
+			user.setPassword(passwordEncoder.encode(user.getPassword()));
+			return userRepository.save(user);
+		}
+		else {
+			throw new UserNotFoundException("The user with the email " +  user.getEmail() + " is not found");
+		}
+	}
+	
+	public List<String> getEmailFromConnectionUser(List<Integer> connectionUser){
+		Iterable<User> users = userRepository.findAllById(connectionUser);
+		List<String> emails =  StreamSupport.stream(users.spliterator(), false)
+									.map(user -> user.getEmail())
+									.collect(Collectors.toList());
+		return emails;
+	}
+		
+	@Transactional	
+	public User appendConnectionUser(User user, User userToAppend) {
+		
+		Optional<User> userOpt = userRepository.findById(user.getId());
+		Optional<User> userOptAppend = userRepository.findById(userToAppend.getId());
+		if (userOpt.isPresent() && userOptAppend.isPresent()){
+			User currentUser = userOpt.get();
+			User userAppend = userOptAppend.get();
+			//Hibernate.initialize(currentUser.getConnectionUser()); // Force l'initialisation
+			// Force l'initialisation en accédant à la collection
+        
+			//currentUser.getConnectionUser().forEach(connection -> {});
+			currentUser.addConnectionUser(userAppend);
+			//System.out.println(currentUser.getConnectionUser());
+			try {
+				return userRepository.save(currentUser);
+			}
+			catch (Exception e) {
+				throw new UserAppendConnectionError("Échec de l'ajout de la connexion pour l'utilisateur " + currentUser.getEmail());
+			}
+			
+			
+		}
+		else {
+			throw new UserNotFoundException("The user with the email " +  user.getEmail() + " is not found");
+		}
+		
+	}
+	
+	public User deleteConnectionUser(User user, User userToDelete) {
+		
+		Optional<User> userOpt = userRepository.findById(user.getId());
+		if (userOpt.isPresent()){
+			User currentUser = userOpt.get();
+			currentUser.removeConnectionUser(userToDelete);
+			return userRepository.save(user);
+		}
+		else {
+			throw new UserNotFoundException("The user with the email " +  user.getEmail() + " is not found");
+		}
+		
 	}
 }
