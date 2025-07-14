@@ -57,7 +57,7 @@ CREATE TABLE user_connection (
 ## 🧪 Exemple de création via terminal
 
 ```bash
-createdb paymybuddy
+createdb -U "utilisateur" paymybuddy
 psql paymybuddy < schema.sql
 ```
 
