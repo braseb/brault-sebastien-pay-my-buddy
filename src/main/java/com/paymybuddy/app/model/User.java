@@ -15,15 +15,19 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "users")
 @DynamicUpdate
 public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@EqualsAndHashCode.Include
 	private int id;
 	
 	private String username;
@@ -35,7 +39,8 @@ public class User {
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "user_connection",
 				joinColumns = @JoinColumn(name = "user_id"),
-				inverseJoinColumns = @JoinColumn(name = "user_connection_id")
+				inverseJoinColumns = @JoinColumn(name = "user_connection_id"),
+				uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "user_connection_id"})
 				)
 	List<User> connectionUser = new ArrayList<User>();
 		
@@ -48,7 +53,10 @@ public class User {
 	private List<Transaction> transactionsSend;
 	
 	public void addConnectionUser(User user) {
-		connectionUser.add(user);
+		if (!connectionUser.contains(user)) {
+			connectionUser.add(user);
+		}
+		
 		//user.getConnectionUser().add(this);
 	}
 	

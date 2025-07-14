@@ -5,6 +5,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.slf4j.Log4jLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,21 +24,14 @@ import jakarta.transaction.Transactional;
 @Service
 public class UserService {
     
-	//private final BCryptPasswordEncoder passwordEncoder;
-	
+	private static final Logger LOGGER =  LogManager.getLogger();
+		
 	@Autowired
 	private UserRepository userRepository;
 	
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
 		
-	
-    /*public UserService(BCryptPasswordEncoder passwordEncoder) {
-        this.passwordEncoder = passwordEncoder;
-    }*/
-    
-   
-	
 	public Optional<User> getUserById(Integer id){
 		return userRepository.findById(id);
 	}
@@ -87,13 +83,25 @@ public class UserService {
 			// Force l'initialisation en accédant à la collection
         
 			//currentUser.getConnectionUser().forEach(connection -> {});
-			currentUser.addConnectionUser(userAppend);
-			//System.out.println(currentUser.getConnectionUser());
+			if (currentUser.getConnectionUser().contains(userAppend)) {
+				LOGGER.error("User {} is already a connection of {}", userAppend.getEmail(), currentUser.getEmail());
+				throw new UserAppendConnectionError("The user with the mail " + 
+													currentUser.getEmail() + 
+													" already have the user " + 
+													userAppend.getEmail() + 
+													" in his connection list");
+			}
 			try {
+				currentUser.addConnectionUser(userAppend);
+				LOGGER.info("Connection successfully added  {} -> {}", userToAppend.getEmail(), currentUser.getEmail());
 				return userRepository.save(currentUser);
 			}
 			catch (Exception e) {
-				throw new UserAppendConnectionError("Échec de l'ajout de la connexion pour l'utilisateur " + currentUser.getEmail());
+				LOGGER.error("emailUser {}", currentUser.getEmail(), e);
+				throw new UserAppendConnectionError("Fail to append the user " +
+													userAppend.getEmail() +
+													" to the connection list of" +  
+													currentUser.getEmail());
 			}
 			
 			
