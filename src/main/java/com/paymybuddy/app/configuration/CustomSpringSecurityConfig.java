@@ -25,7 +25,7 @@ public class CustomSpringSecurityConfig {
 	@Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests(auth -> {
-                      	auth.requestMatchers("/login, /register").permitAll();
+                      	auth.requestMatchers("/login", "/register").permitAll();
         				auth.anyRequest().authenticated();
         }).formLogin(formLogin -> formLogin.defaultSuccessUrl("/transaction", true)
         									.permitAll())
