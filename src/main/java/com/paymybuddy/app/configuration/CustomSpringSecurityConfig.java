@@ -3,9 +3,7 @@ package com.paymybuddy.app.configuration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -25,12 +23,17 @@ public class CustomSpringSecurityConfig {
 	@Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests(auth -> {
-                      	auth.requestMatchers("/login", "/register").permitAll();
-        				auth.anyRequest().authenticated();
-        }).formLogin(formLogin -> formLogin.defaultSuccessUrl("/transaction", true)
-        									.permitAll())
-        .logout(Customizer.withDefaults())		
-        .build();
+	            auth.requestMatchers("/login", "/register").permitAll();
+	            auth.anyRequest().authenticated();
+				})
+                //.formLogin(formLogin -> formLogin.defaultSuccessUrl("/transaction", true))//.permitAll())
+                .formLogin(login -> login.loginPage("/login")
+                					.usernameParameter("email")
+                					.passwordParameter("password")
+			                        .defaultSuccessUrl("/transaction", true)
+			                        .permitAll())
+			                		.logout(Customizer.withDefaults())
+			                        .build();
 
     }
 
