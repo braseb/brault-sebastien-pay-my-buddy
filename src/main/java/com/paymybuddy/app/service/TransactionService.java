@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.paymybuddy.app.dto.TransactionDto;
 import com.paymybuddy.app.model.Transaction;
 import com.paymybuddy.app.projection.TransactionProjection;
 import com.paymybuddy.app.repository.TransactionRepository;
@@ -22,13 +23,16 @@ public class TransactionService {
 	private TransactionRepository transactionRepository;
 	
 	@Transactional
-	public List<TransactionProjection> getTransactionByUserId(Integer id) {
-		List<TransactionProjection> transactions = transactionRepository.findByUserSenderId(id);
-
+	public List<TransactionDto> getTransactionByUserId(Integer id) {
+		List<TransactionProjection> transactionsProjection = transactionRepository.findByUserSenderId(id);
+		LOGGER.info("list of transactions " + transactionsProjection);
+		
+		List<TransactionDto> transactions = transactionsProjection.stream()
+	            .map(p -> new TransactionDto(p.getUsername(), p.getDescription(), p.getAmount()))
+	            .toList();
+		
 		return transactions;
-		/*return transactions.stream()
-			.map(TransactionDto::new)
-			.collect(Collectors.toList());*/
+		
 	}
 	
 	public Transaction saveTransaction(Transaction transaction) {
