@@ -40,9 +40,9 @@ public class UserService {
 		return userRepository.findByEmail(email);
 	}
 	
-	public List<User> getUserWithAmountLessThan(Double amount){
+	/*public List<User> getUserWithAmountLessThan(Double amount){
 		return userRepository.findBytransactionsSendAmountLessThan(amount);
-	}
+	}*/
 	
 	public User createUser(User user) {
 		if (userRepository.existsById(user.getId())){
@@ -63,8 +63,13 @@ public class UserService {
 		}
 	}
 	
-	public List<String> getEmailFromConnectionUser(List<Integer> connectionUser){
-		Iterable<User> users = userRepository.findAllById(connectionUser);
+	
+	public List<String> getEmailFromConnectionUser(List<User> connectionUser){
+		List<Integer> connectionUserId = connectionUser.stream()
+														.map(user -> user.getId())
+														.toList();
+		LOGGER.info("liste id user : " + connectionUserId);
+		Iterable<User> users = userRepository.findAllById(connectionUserId);
 		List<String> emails =  StreamSupport.stream(users.spliterator(), false)
 									.map(user -> user.getEmail())
 									.collect(Collectors.toList());
