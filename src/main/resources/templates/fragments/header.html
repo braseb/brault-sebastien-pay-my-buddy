@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+   	<meta charset="utf-8">
+   
+  </head>
+  <body>
+    <div th:fragment="header">
+       <nav class="menu">
+		  <a href="/" th:href="@{/}">Home</a>
+		  <a href="/transaction" th:href="@{/transaction}">Transférer</a>
+		  <a href="/profil" th:href="@{/profil}">Profil</a>
+		  <a href="/connection" th:href="@{/connection}">Ajouter relation</a>
+		  <form th:action="@{/logout}" method="post" style="display: inline" >
+    			<button type="submit">
+     				 Se déconnecter
+    			</button>
+  </form>
+		 		  
+		</nav> 
+    </div>
+  </body>
+</html>

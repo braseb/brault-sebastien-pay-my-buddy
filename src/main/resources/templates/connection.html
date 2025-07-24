@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="/style/menuStyle.css">
+		<title>Transactions</title>
+		
+	</head>
+	
+	<body>
+		<div th:replace="~{fragments/header :: header}">...</div>
+		<h1 th:text="#{appli.title}"></h1>
+		<form th:action="@{/add_user_connection}" method="post">
+			<label for="email">Chercher une relation</label><br>
+			<input type="text" id="email" name="email" placeholder="Saisir une addresse email" />
+			<input type="submit" value="Ajouter">
+		</form>
+		
+	</body>
+</html>
+

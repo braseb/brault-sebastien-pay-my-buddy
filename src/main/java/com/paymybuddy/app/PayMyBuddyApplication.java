@@ -32,7 +32,7 @@ public class PayMyBuddyApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		Optional<User> optUser = userService.getUserById(1);
+		/*Optional<User> optUser = userService.getUserById(1);
 		User user = optUser.get();
 		System.out.println(user.getUsername());
 				
@@ -41,7 +41,7 @@ public class PayMyBuddyApplication implements CommandLineRunner {
 		
 		List<TransactionProjection> transactions = transactionService.getTransactionByUserId(2);
 		System.out.println("transactions");
-		transactions.forEach(transaction -> System.out.println(transaction.getUsername()));
+		transactions.forEach(transaction -> System.out.println(transaction.getUsername()));*/
 		
 		//insert transaction
 		/*Transaction transaction = new Transaction();
@@ -56,18 +56,12 @@ public class PayMyBuddyApplication implements CommandLineRunner {
 		}*/
 		
 		//add userConnection
-		Optional<User> userConnectedOpt = userService.getUserByEmail("tata@tata.fr");
+		/*Optional<User> userConnectedOpt = userService.getUserByEmail("tata@tata.fr");
 		Optional<User> userToAppend = userService.getUserByEmail("toto@toto.fr");
 		if (userConnectedOpt.isPresent() && userToAppend.isPresent()) {
 			userService.appendConnectionUser(userConnectedOpt.get(), userToAppend.get());
-		}
-		
-		
-		
-		
-		
-		
-		
+		}*/
+				
 		//get list of connectionUser
 		
 		
