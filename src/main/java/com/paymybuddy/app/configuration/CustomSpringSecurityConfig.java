@@ -1,6 +1,5 @@
 package com.paymybuddy.app.configuration;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -8,8 +7,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-
-import com.paymybuddy.app.service.CustomUserDetailsService;
+import org.springframework.web.filter.HiddenHttpMethodFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -23,8 +21,9 @@ public class CustomSpringSecurityConfig {
 	@Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests(auth -> {
-	            auth.requestMatchers("/login", "/register").permitAll();
-	            auth.anyRequest().authenticated();
+	            auth.requestMatchers("/login", "/register").permitAll()
+	            	.requestMatchers("/style/**", "/images/**", "/js/**").permitAll()
+	            	.anyRequest().authenticated();
 				})
                 //.formLogin(formLogin -> formLogin.defaultSuccessUrl("/transaction", true))//.permitAll())
                 .formLogin(login -> login.loginPage("/login")
@@ -50,4 +49,9 @@ public class CustomSpringSecurityConfig {
         return authenticationManagerBuilder.build();
 
     }*/
+    
+    @Bean
+    HiddenHttpMethodFilter hiddenHttpMethodFilter() {
+        return new HiddenHttpMethodFilter();
+    }
 }
