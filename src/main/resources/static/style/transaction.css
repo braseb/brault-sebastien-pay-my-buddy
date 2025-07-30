@@ -1,0 +1,109 @@
+html, body {
+    height: 100%;
+    margin: 0;
+  }
+
+body {
+	overflow: hidden;
+	display: flex;
+	flex-direction:column;
+	/*flex-grow: 0;
+	flex-shrink: 0;
+	flex-basis: auto;*/
+	height: 100%; 
+}
+
+
+.tableau-transactions{
+	/*width: 100%;*/
+	border-collapse: collapse;
+	
+	
+}
+
+.tableau-transactions th, .tableau-transactions td{
+	text-align: left;
+	padding: 20px;
+	
+}
+
+.tableau-transactions th{
+	font-size: 22px;
+}
+
+.tableau-transactions td{
+	border-top: solid;
+	border-color: lightgray;
+	border-width: 1px;
+	font-size: 20px;
+	
+}
+
+.tableau{
+	border-width: 1px;
+	border-style:solid;
+	border-radius: 10px;
+	width: auto;
+	border-color: lightgray;
+	padding: 5px;
+	margin: 5px 5px;
+	display: flex;
+	flex-direction:column;
+	flex-grow: 1;
+	/*flex-shrink: 0;*/
+	/*flex-basis: 300px;*/
+	/*min-height: 0;*/
+	align-items: stretch;
+	overflow-y: auto;
+	/*max-height: 300px;*/
+	
+}
+
+.tableau h2 {
+	font-weight: bold;
+	font-size: 24px
+}
+
+.formulaire-transaction{
+	display: flex;
+	flex-direction:row;
+	flex-grow: 0;
+	flex-basis:auto;
+	/*max-height: 200px;*/
+	align-items: center;
+	justify-content: space-around;
+	flex-wrap: wrap;
+	
+}
+
+.formulaire-transaction select, .description{
+	width: 30%;
+}
+
+.montant{
+	position: relative;
+	display: inline-block;
+}
+
+.montant input {
+	width: 100px;
+	padding-right: 25px;
+}
+
+.montant span {
+	position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #888;
+    pointer-events: none;
+}
+
+#pay-button{
+	background-color: cyan;
+	color: white;
+	width: 100px;
+	padding: 10px;
+	font-size: 16px;
+	font-style: bold;
+}

@@ -4,20 +4,28 @@
    	<meta charset="utf-8">
    
   </head>
-  <body>
-    <div th:fragment="header">
-       <nav class="menu">
-		  <a href="/" th:href="@{/}">Home</a>
-		  <a href="/transaction" th:href="@{/transaction}">Transférer</a>
-		  <a href="/profil" th:href="@{/profil}">Profil</a>
-		  <a href="/connection" th:href="@{/connection}">Ajouter relation</a>
-		  <form th:action="@{/logout}" method="post" style="display: inline" >
-    			<button type="submit">
-     				 Se déconnecter
-    			</button>
-  </form>
-		 		  
+  <header>
+	<div th:fragment="header" class="header">
+		<div class="header-left">
+			<label class="nameApp" th:text="#{appli.title}"></label>
+		</div>
+		<div class="header-center">
+		</div>
+		
+		<nav class="header-menu">
+			<a sec:authorize="!isAuthenticated()" href="/login" th:href="@{/login}">Connection</a>
+			<a sec:authorize="!isAuthenticated()" href="/register" th:href="@{/register}">S'inscrire</a>
+			<a sec:authorize="isAuthenticated()" href="/connection" th:href="@{/connection}">Ajouter relation</a>
+			<a sec:authorize="isAuthenticated()" href="/transaction" th:href="@{/transaction}">Transférer</a>
+			<a sec:authorize="isAuthenticated()" href="/profile" th:href="@{/profile}">Profil</a>
+		  	<form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post" style="display: inline" >
+		  		<button type="submit">
+		   			Se déconnecter
+		  		</button>
+		  	</form>
+	  		
+  		  
 		</nav> 
     </div>
-  </body>
+  </header>
 </html>
