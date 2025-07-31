@@ -1,9 +1,12 @@
-.nameapp{
+.nameApp{
 	color: black;
 }
 
 .header{
 	display: flex;
+	justify-content : center;
+	height: 60px; /* fixe */
+	
 }
 
 .header-menu{
@@ -15,7 +18,11 @@
 }
 
 .header-left{
-	flex-shrink: 0
+	display: flex;
+	flex-direction:column;
+	flex-shrink: 0;
+	justify-content: center;
+	align-content: center;
 }
 
 .header-center{

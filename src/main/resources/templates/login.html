@@ -12,19 +12,21 @@
 	<body>
 		<div th:replace="~{fragments/header :: header}">...</div>
 		<main>
-			<h1 th:text="#{appli.title}"></h1>
-			<div th:if="${param.error}">
-	    		<p style="color: red;">Email ou mot de passe invalide.</p>
-			</div>
-			<div th:if="${param.logout}">
-				You have been logged out.
-			</div>
+			
+			
 			<form th:action=@{/login} method="post" class="formulaire">
-				<label for="email">Email</label>
-				<input type="email" id="email" name="email" autocomplete="email" autofocus="autofocus"/><br>
-				<label for="password">Password</label>
-				<input type="password" id="password" name="password" autocomplete="current-password"/><br>
-				<input type="submit" value="login"/>
+				<div th:if="${param.error}">
+		    		<p style="color: red; text-align: center;">Email ou mot de passe invalide.</p>
+				</div>
+				<div th:if="${param.logout}">
+					<p style="color: red; text-align: center;">You have been logged out.</p>
+				</div>
+				<h1 id="titre" th:text="#{appli.title}"></h1>
+				<div id="inputEmailPassword">
+					<input type="email" id="email" name="email" autocomplete="email" autofocus="autofocus" placeholder="Mail"/>
+					<input type="password" id="password" name="password" autocomplete="current-password" placeholder="Mot de passe"/>
+				</div>	
+				<input id="connectButton" type="submit" value="Se connecter"/>
 			</form>
 		</main>
 	</body>

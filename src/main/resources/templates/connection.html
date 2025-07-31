@@ -4,19 +4,25 @@
 	<head>
 		<meta charset="utf-8">
 		<link rel="stylesheet" href="/style/header.css">
-		<title>Transactions</title>
+		<link rel="stylesheet" href="/style/connection.css">
+		<title>Connection</title>
 		
 	</head>
 	
 	<body>
-		<div th:replace="~{fragments/header :: header}">...</div>
-		<h1 th:text="#{appli.title}"></h1>
-		<form th:action="@{/add_user_connection}" method="post">
-			<label for="email">Chercher une relation</label><br>
-			<input type="text" id="email" name="email" placeholder="Saisir une addresse email" />
-			<input type="submit" value="Ajouter">
-		</form>
 		
+		<div th:replace="~{fragments/header :: header}">...</div>
+		<main>	
+			<form class="formulaire" th:action="@{/add_user_connection}" method="post">
+				<div class="labelMail">
+					<label for="email">Chercher une relation</label>
+					<input type="text" id="email" name="email" placeholder="Saisir une addresse email" />
+				</div>
+				<div id="divButton">
+					<input id="appendButton" type="submit" value="Ajouter">
+				</div>
+			</form>
+		</main>
 	</body>
 </html>
 
