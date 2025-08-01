@@ -23,15 +23,15 @@ public class TransactionService {
 	private TransactionRepository transactionRepository;
 	
 	@Transactional
-	public List<TransactionDto> getTransactionByUserId(Integer id) {
-		List<TransactionProjection> transactionsProjection = transactionRepository.findByUserSenderId(id);
+	public List<TransactionProjection> getTransactionByUserId(Integer id) {
+		/*List<TransactionProjection> transactionsProjection = transactionRepository.findByUserSenderId(id);
 		LOGGER.info("list of transactions " + transactionsProjection);
 		
 		List<TransactionDto> transactions = transactionsProjection.stream()
 	            .map(p -> new TransactionDto(p.getUsername(), p.getDescription(), p.getAmount()))
-	            .toList();
+	            .toList();*/
 		
-		return transactions;
+		return transactionRepository.findByUserSenderId(id);
 		
 	}
 	

@@ -13,9 +13,10 @@ import com.paymybuddy.app.projection.TransactionProjection;
 @Repository
 public interface TransactionRepository extends CrudRepository<Transaction, Integer> {
 	
-	@Query(value = "SELECT u.username, t.description, t.amount"
+	@Query(value = "SELECT us.username, t.description, t.amount"
 					+ " FROM transaction t"
 					+ " INNER JOIN users u ON u.id = t.sender_id"
+					+ " INNER JOIN users us ON us.id = t.receiver_id"
 					+ " WHERE u.id = :id"
 					, nativeQuery = true)
 	

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.paymybuddy.app.dto.TransactionDto;
 import com.paymybuddy.app.model.Transaction;
@@ -49,8 +50,8 @@ public class TransactionController {
 		User user = customUserDetailsService.getCurrentUser();
 		List<String> listEmail = userService.getEmailFromConnectionUser(user.getConnectionUser());
 		LOGGER.info("liste mails : " + listEmail);
-		List<TransactionDto> listTransations = transactionService.getTransactionByUserId(user.getId());
-		model.addAttribute("transactions", listTransations)
+		//List<TransactionDto> listTransations = transactionService.getTransactionByUserId(user.getId());
+		model.addAttribute("transactions", transactionService.getTransactionByUserId(user.getId()))
 				.addAttribute("listEmail", listEmail);
 		//model.addAttribute("listEmail", listEmail);
 				
@@ -81,22 +82,23 @@ public class TransactionController {
 		
 		transactionService.saveTransaction(transaction);
 				
-		List<String> listEmail = userService.getEmailFromConnectionUser(user.getConnectionUser());
+		/*List<String> listEmail = userService.getEmailFromConnectionUser(user.getConnectionUser());
 		List<TransactionDto> listTransations = transactionService.getTransactionByUserId(user.getId());
 		model.addAttribute("transactions", listTransations)
-		.addAttribute("listEmail", listEmail);
-		return "transaction";
+		.addAttribute("listEmail", listEmail);*/
+		return "redirect:/transaction";
 	}
 	
 	@ExceptionHandler({MissingServletRequestParameterException.class, TypeMismatchException.class})
-    public String handleMissingParams(Exception ex, Model model) {
-		User user = customUserDetailsService.getCurrentUser();
+    public String handleMissingParams(Exception ex, RedirectAttributes redirectAttributes) {
+		/*User user = customUserDetailsService.getCurrentUser();
 		List<String> listEmail = userService.getEmailFromConnectionUser(user.getConnectionUser());
 		LOGGER.info("liste mails : " + listEmail);
 		List<TransactionDto> listTransations = transactionService.getTransactionByUserId(user.getId());
 		model.addAttribute("transactions", listTransations)
 				.addAttribute("listEmail", listEmail)
-				.addAttribute("globalError", "Tous les champs sont obligatoires et doivent être valides.");
-        return "transaction"; // Retourne la même page avec un message global
+				.addAttribute("globalError", "Tous les champs sont obligatoires et doivent être valides.");*/
+        redirectAttributes.addFlashAttribute("globalError", "Tous les champs sont obligatoires et doivent être valides.");
+		return "redirect:/transaction"; // Retourne la même page avec un message global
     }
 }
