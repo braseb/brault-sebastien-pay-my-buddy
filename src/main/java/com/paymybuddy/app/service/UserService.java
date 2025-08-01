@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.paymybuddy.app.dto.UserDto;
 import com.paymybuddy.app.exception.UserAlreadyExistException;
 import com.paymybuddy.app.exception.UserAppendConnectionError;
 import com.paymybuddy.app.exception.UserNotFoundException;
@@ -39,21 +40,18 @@ public class UserService {
 	public Optional<User> getUserByEmail(String email){
 		return userRepository.findByEmail(email);
 	}
-	
-	/*public List<User> getUserWithAmountLessThan(Double amount){
-		return userRepository.findBytransactionsSendAmountLessThan(amount);
-	}*/
-	
+		
 	public User createUser(User user) {
 		if (userRepository.existsById(user.getId())){
 			throw new UserAlreadyExistException("The user with the email " +  user.getEmail() + " already exist");
 		}
-		
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		return userRepository.save(user);
 		
 	}
 	
 	public User updateUser(User user) {
+			
 		if (userRepository.existsById(user.getId())){
 			user.setPassword(passwordEncoder.encode(user.getPassword()));
 			return userRepository.save(user);
