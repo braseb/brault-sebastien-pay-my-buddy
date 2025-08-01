@@ -30,7 +30,7 @@ main {
 	
 }
 
-.labelMail{
+.infosFormulaire{
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -51,7 +51,7 @@ main {
 	align-content:center;
 }
 
-#appendButton{
+#changedButton{
 	
 	border: solid 1px;
 	background-color: orange;
@@ -65,7 +65,7 @@ main {
 	
 }
 
-#email{
+#email, #Username, #password, #oldPassword{
 	border-radius: 5px;
 	height: 45px;
 	width:100%;
@@ -73,4 +73,19 @@ main {
 	border-width:1px;
 	border-color: gray;
 	background-color: white;
+	
+}
+
+.labels{
+	text-align: left;
+	width: 300px;
+}
+
+.labelValue{
+	display: flex;
+	gap:15px;
+	align-items: center;
+	
+	
+	
 }

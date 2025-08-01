@@ -4,19 +4,27 @@
 	<head>
 		<meta charset="utf-8">
 		<link rel="stylesheet" href="/style/header.css">
-		<title>Transactions</title>
+		<link rel="stylesheet" href="/style/login.css">
+		<title>Register</title>
 		
 	</head>
 	
 	<body>
 		<div th:replace="~{fragments/header :: header}">...</div>
-		<h1 th:text="#{appli.title}"></h1>
-		<form th:action=@{/register} method="post" class="formulaire">
-			<input type="text" id="username" name="username" autocomplete="username" autofocus="autofocus" placeholder="username"/><br>
-			<input type="email" id="email" name="email" autocomplete="email" placeholder="Mail"/><br>
-			<input type="password" id="password" name="password" autocomplete="new-password" placeholder="Mot de passe"/><br>
-			<input type="submit" value="S'inscrire"/>
-		</form>
+		<main>
+			<form th:action=@{/register} method="post" class="formulaire">
+				<div th:if="${param.error}">
+		    		<p style="color: red; text-align: center;">Email ou mot de passe invalide.</p>
+				</div>
+				<h1 id="titre" th:text="#{appli.title}"></h1>
+				<div id="inputFormulaire">
+					<input class="input" type="text" id="username" name="username" autocomplete="username" autofocus="autofocus" placeholder="username"/><br>
+					<input class="input" type="email" id="email" name="email" autocomplete="email" placeholder="Mail"/><br>
+					<input class="input" type="password" id="password" name="password" autocomplete="new-password" placeholder="Mot de passe"/><br>
+				</div>
+				<input id="submiButton" type="submit" value="S'inscrire"/>
+			</form>
+		</main>
 		
 		
 		

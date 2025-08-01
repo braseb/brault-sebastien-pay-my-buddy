@@ -59,7 +59,7 @@ main {
 	
 }
 
-#connectButton{
+#submiButton{
 	border: solid 1px;
 	background-color: deepskyblue;
 	color: white;
@@ -71,13 +71,12 @@ main {
 	cursor: pointer;
 }
 
-#inputEmailPassword{
+#inputFormulaire{
 	display:flex;
 	flex-direction:column;
 	gap:20px;
 }
-
-#email, #password{
+.input{
 	border-radius: 15px;
 	height: 45px;
 	border-style: solid;

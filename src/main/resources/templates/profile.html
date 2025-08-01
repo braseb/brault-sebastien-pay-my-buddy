@@ -4,24 +4,39 @@
 	<head>
 		<meta charset="utf-8">
 		<link rel="stylesheet" href="/style/header.css">
+		<link rel="stylesheet" href="/style/profile.css">
 		<title>Transactions</title>
 		
 	</head>
 	
 	<body>
 		<div th:replace="~{fragments/header :: header}">...</div>
-		<h1 th:text="#{appli.title}"></h1>
-		<form th:action="@{/profile}" method="post" th:object="${user}">
-    		<input type="hidden" name="_method" value="put"/>
-    		<label for="username">Username</label>
-			<input type="text" id="Username" name="username" autocomplete="username" th:field="*{username}"/><br>
-			<label for="email">Mail</label>
-			<input type="email" id="email" name="email" autocomplete="email" th:field="*{email}"/><br>
-			<label for="password">Mot de passe</label>
-			<input type="password" id="password" name="password"  placeholder="mot de passe" autocomplete="current-password" th:field="*{password}"/><br>
-    		<input type="submit" name="Modifier" value="Modifier" />
-		</form>
-		
+		<main>
+			<form class="formulaire" th:action="@{/profile}" method="post" th:object="${user}">
+	    		<div class="infosFormulaire">
+		    		<input type="hidden" name="_method" value="put"/>
+		    		<div class="labelValue">
+		    			<label class="labels" for="username">Username</label>
+		    			<input type="text" id="Username" name="username" autocomplete="username" th:field="*{username}"/>
+					</div>
+					<div class="labelValue">
+						<label class="labels" for="email">Mail</label>
+						<input type="email" id="email" name="email" autocomplete="email" th:field="*{email}"/>
+					</div>
+					<div class="labelValue">
+						<label class="labels" for="password">Ancien mot de passe</label>
+						<input type="password" id="oldPassword" name="oldPassword"  placeholder="Ancien mot de passe" autocomplete="current-password"/>
+					</div>
+					<div class="labelValue">
+						<label class="labels" for="password">Nouveau mot de passe</label>
+						<input type="password" id="password" name="password"  placeholder="Nouveau mot de passe" autocomplete="current-password" th:field="*{password}"/>
+	    			</div>
+	    		</div>
+	    		<div id="divButton">
+	    			<input id="changedButton" type="submit" name="Modifier" value="Modifier" />
+	    		</div>
+			</form>
+		</main>
 		
 		
 	</body>

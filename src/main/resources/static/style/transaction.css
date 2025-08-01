@@ -76,8 +76,16 @@ body {
 	
 }
 
-.formulaire-transaction select, .description{
+.formulaire-transaction select, #description{
 	width: 30%;
+}
+
+#description, #emailSelect, #amount{
+	border-radius: 15px;
+	height: 45px;
+	border-style: solid;
+	border-color: gray;
+	background-color: white;
 }
 
 .montant{
@@ -100,10 +108,14 @@ body {
 }
 
 #pay-button{
-	background-color: cyan;
 	color: white;
 	width: 100px;
-	padding: 10px;
-	font-size: 16px;
-	font-style: bold;
+	border: solid 1px;
+	background-color: deepskyblue;
+	font-size:25px;
+	font-weight:bold;
+	padding: 15px;
+	text-align:center;
+	border-radius: 10px;
+	cursor: pointer;
 }
