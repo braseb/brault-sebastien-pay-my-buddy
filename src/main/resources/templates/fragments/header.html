@@ -13,11 +13,25 @@
 		</div>
 		
 		<nav class="header-menu">
-			<a sec:authorize="!isAuthenticated()" href="/login" th:href="@{/login}">Connection</a>
-			<a sec:authorize="!isAuthenticated()" href="/register" th:href="@{/register}">S'inscrire</a>
-			<a sec:authorize="isAuthenticated()" href="/connection" th:href="@{/connection}">Ajouter relation</a>
-			<a sec:authorize="isAuthenticated()" href="/transaction" th:href="@{/transaction}">Transférer</a>
-			<a sec:authorize="isAuthenticated()" href="/profile" th:href="@{/profile}">Profil</a>
+			<a sec:authorize="!isAuthenticated()" 
+				href="/login" th:href="@{/login}" 
+				th:classappend="${activePage == '/login'} ? 'active'">Connection</a>
+			<a sec:authorize="!isAuthenticated()" 
+				href="/register" 
+				th:href="@{/register}" 
+				th:classappend="${activePage == '/register'} ? 'active'">S'inscrire</a>
+			<a sec:authorize="isAuthenticated()" 
+				href="/connection" 
+				th:href="@{/connection}"
+				th:classappend="${activePage} == '/connection' ? 'active'">Ajouter relation</a>
+			<a sec:authorize="isAuthenticated()" 
+				href="/transaction" 
+				th:href="@{/transaction}"
+				th:classappend="${activePage} == '/transaction' ? 'active'">Transférer</a>
+			<a sec:authorize="isAuthenticated()" 
+				href="/profile" 
+				th:href="@{/profile}"
+				th:classappend="${activePage} == '/profile' ? 'active'">Profil</a>
 		  	<form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post" style="display: inline" >
 		  		<button type="submit">
 		   			Se déconnecter

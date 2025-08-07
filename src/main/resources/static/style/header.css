@@ -6,6 +6,8 @@
 	display: flex;
 	justify-content : center;
 	height: 60px; /* fixe */
+	margin-left: 25px;
+	margin-right: 25px;
 	
 }
 
@@ -46,4 +48,8 @@
 	cursor: pointer;
 	vertical-align: middle;
 	
+}
+
+.active{
+	color: deepskyblue !Important;
 }
