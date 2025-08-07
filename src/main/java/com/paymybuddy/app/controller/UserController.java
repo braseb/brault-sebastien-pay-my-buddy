@@ -2,44 +2,39 @@ package com.paymybuddy.app.controller;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.paymybuddy.app.dto.UserDto;
-import com.paymybuddy.app.exception.UserNotFoundException;
+import com.paymybuddy.app.dto.mapping.UserMapping;
 import com.paymybuddy.app.model.User;
-import com.paymybuddy.app.service.CustomUserDetailsService;
 import com.paymybuddy.app.service.UserService;
-import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 
 @Controller
 //@RestController
 public class UserController {
 
     private final UserService userService;
-    private final CustomUserDetailsService customUserDetailsService;
+    
 	
 	private static final Logger LOGGER =  LogManager.getLogger();
 
-    UserController(UserService userService, CustomUserDetailsService customUserDetailsService) {
+    UserController(UserService userService) {
         this.userService = userService;
-        this.customUserDetailsService = customUserDetailsService;
+        
     }
 	
 		
 	@GetMapping("/login")
-	public String login() {
+	public String login(Model model) {
 		return "login";
 	}
 		
@@ -53,7 +48,7 @@ public class UserController {
 	@GetMapping("/profile")
 	public String getProfile(Model model) {
 		LOGGER.info("get profile user");
-		User user = customUserDetailsService.getCurrentUser();
+		User user = userService.getCurrentUser();
 		model.addAttribute("user", user);
 		return "profile";
 	}
@@ -61,7 +56,7 @@ public class UserController {
 	@PutMapping("/profile")
 	public String updateProfile(Model model, @ModelAttribute UserDto userDto) {
 		LOGGER.info("update profile user");
-		User userConnected = customUserDetailsService.getCurrentUser();
+		User userConnected = userService.getCurrentUser();
 		String oldEmail = userConnected.getEmail();
 				
 		userConnected.setEmail(userDto.getEmail());
@@ -72,13 +67,7 @@ public class UserController {
 				
 		userService.updateUser(userConnected);
 		if (oldEmail != userDto.getEmail()) {
-			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-			UserDetails updatedUserDetails = customUserDetailsService.loadUserByUsername(userConnected.getEmail());
-
-			Authentication newAuth = new UsernamePasswordAuthenticationToken(
-			    updatedUserDetails, authentication.getCredentials(), updatedUserDetails.getAuthorities());
-
-			SecurityContextHolder.getContext().setAuthentication(newAuth);
+			userService.refreshAuthentification();
 		}
 		
 		
@@ -87,18 +76,18 @@ public class UserController {
 	}
 	
 	@GetMapping("/register")
-	public String  getCreateProfile() {
+	public String  getCreateProfile(@ModelAttribute UserDto userDto) {
 		return "register";
 	}
 	
 	@PostMapping("/register")
-	public String createProfil(@ModelAttribute UserDto userDto) {
-		User user = new User();
-		user.setUsername(userDto.getUsername());
-		user.setEmail(userDto.getEmail());
-		user.setPassword(userDto.getPassword());
+	public String createProfil(@Valid @ModelAttribute UserDto userDto, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+		if (bindingResult.hasErrors()){
+			return "register";
+		}
 		
-		userService.createUser(user);
+		userService.createUser(UserMapping.mapToUser(userDto));
+		redirectAttributes.addFlashAttribute("successCreate", "User create with success");
 		return "redirect:/login";
 	}
 	
@@ -110,10 +99,7 @@ public class UserController {
 	@PostMapping("/add_user_connection")
 	public String addConnectionUser(@RequestParam(required = true) String email) {
 		LOGGER.info("append user connection");
-		User user = customUserDetailsService.getCurrentUser();
-		User userConnection = userService.getUserByEmail(email)
-								.orElseThrow(() -> new UserNotFoundException("user not found"));
-		userService.appendConnectionUser(user, userConnection);
+		userService.appendConnectionUser(email);
 		return "connection";
 	}
 	

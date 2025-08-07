@@ -13,17 +13,10 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import com.paymybuddy.app.dto.TransactionDto;
 import com.paymybuddy.app.model.Transaction;
 import com.paymybuddy.app.model.User;
-import com.paymybuddy.app.projection.TransactionProjection;
-import com.paymybuddy.app.service.CustomUserDetailsService;
 import com.paymybuddy.app.service.TransactionService;
 import com.paymybuddy.app.service.UserService;
 
@@ -42,12 +35,11 @@ public class TransactionController {
 	UserService userService;
 	
 		
-	@Autowired
-	CustomUserDetailsService customUserDetailsService;
+	
 	
 	@GetMapping("/transaction")
 	public String getTransactionPage(Model model) {
-		User user = customUserDetailsService.getCurrentUser();
+		User user = userService.getCurrentUser();
 		List<String> listEmail = userService.getEmailFromConnectionUser(user.getConnectionUser());
 		LOGGER.info("liste mails : " + listEmail);
 		//List<TransactionDto> listTransations = transactionService.getTransactionByUserId(user.getId());
@@ -66,7 +58,7 @@ public class TransactionController {
 													@RequestParam(defaultValue = "") String description,
 													@RequestParam(required = true) Double amount) {
 		LOGGER.info("Create transaction");
-		User user = customUserDetailsService.getCurrentUser();
+		User user = userService.getCurrentUser();
 		
 		User userReceiver = userService.getUserByEmail(emailSelect)
 										.orElseThrow(() -> new UsernameNotFoundException("User not found"));
