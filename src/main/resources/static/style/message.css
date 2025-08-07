@@ -1,0 +1,17 @@
+.messageError{
+	color:red;
+	padding: 5px;
+	border: solid 1px red;
+	background-color: #FF000044;
+	border-radius: 5px;
+	text-align: center;
+}
+
+.messageOk{
+	color:green;
+	padding: 5px;
+	border: solid 1px green;
+	background-color: #00FF0044;
+	border-radius: 5px;
+	text-align: center;
+}

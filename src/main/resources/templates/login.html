@@ -5,6 +5,7 @@
 		<meta charset="utf-8">
 		<link rel="stylesheet" href="/style/header.css">
 		<link rel="stylesheet" href="/style/login.css">
+		<link rel="stylesheet" href="/style/message.css">
 		<title>Login</title>
 		
 	</head>
@@ -16,10 +17,13 @@
 			
 			<form th:action=@{/login} method="post" class="formulaire">
 				<div th:if="${param.error}">
-		    		<p style="color: red; text-align: center;">Email ou mot de passe invalide.</p>
+		    		<p class="messageError"> Email ou mot de passe invalide.</p>
 				</div>
 				<div th:if="${param.logout}">
-					<p style="color: red; text-align: center;">You have been logged out.</p>
+					<p class="messageError">You have been logged out.</p>
+				</div>
+				<div th:if="${successCreate}" class="messageOk">
+					<p th:text="${successCreate}"></p>
 				</div>
 				<h1 id="titre" th:text="#{appli.title}"></h1>
 				<div id="inputFormulaire">

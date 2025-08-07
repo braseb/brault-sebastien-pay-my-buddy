@@ -5,6 +5,7 @@
 		<meta charset="utf-8">
 		<link rel="stylesheet" href="/style/header.css">
 		<link rel="stylesheet" href="/style/login.css">
+		<link rel="stylesheet" href="/style/message.css">
 		<title>Register</title>
 		
 	</head>
@@ -12,15 +13,17 @@
 	<body>
 		<div th:replace="~{fragments/header :: header}">...</div>
 		<main>
-			<form th:action=@{/register} method="post" class="formulaire">
-				<div th:if="${param.error}">
-		    		<p style="color: red; text-align: center;">Email ou mot de passe invalide.</p>
-				</div>
+			<form th:action=@{/register} method="post" class="formulaire" th:object="${userDto}">
 				<h1 id="titre" th:text="#{appli.title}"></h1>
 				<div id="inputFormulaire">
-					<input class="input" type="text" id="username" name="username" autocomplete="username" autofocus="autofocus" placeholder="username"/><br>
-					<input class="input" type="email" id="email" name="email" autocomplete="email" placeholder="Mail"/><br>
-					<input class="input" type="password" id="password" name="password" autocomplete="new-password" placeholder="Mot de passe"/><br>
+					<div class="messageError" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
+					<input class="input" th:field="*{username}" type="text" id="username" name="username" autocomplete="username" autofocus="autofocus" placeholder="username"/><br>
+					<div class="messageError" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+					<input class="input" th:field="*{email}" type="email" id="email" name="email" autocomplete="email" placeholder="Mail"/><br>
+					<div class="messageError" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+					<input class="input" th:field="*{password}" type="password" id="password" name="password" autocomplete="new-password" placeholder="Mot de passe"/><br>
+					
+					
 				</div>
 				<input id="submiButton" type="submit" value="S'inscrire"/>
 			</form>
