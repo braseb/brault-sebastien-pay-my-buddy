@@ -70,18 +70,23 @@ public class UserService {
 		String newPassword = userUpdateDto.getNewPassword();
 		String oldPassword = userUpdateDto.getOldPassword();
 		//update password only if the length of the old or the new is > 0
-		if (newPassword.length() > 0 || oldPassword.length() > 0) {
-			if (!passwordEncoder.matches(oldPassword, userConnected.getPassword())) {
-				throw new IllegalArgumentException("The old password is not correct");
-			}
-			userConnected.setPassword(passwordEncoder.encode(userUpdateDto.getNewPassword()));
-		}
+		if (newPassword != null && oldPassword != null) {
+			if (!newPassword.isEmpty() || !oldPassword.isEmpty()) {
+				if (!passwordEncoder.matches(oldPassword, userConnected.getPassword())) {
+					throw new IllegalArgumentException("The old password is not correct");
+				}
+				userConnected.setPassword(passwordEncoder.encode(userUpdateDto.getNewPassword()));
 				
+				
+			}
+		}
+		
+		
 		//refresh the authentification for take the new email as username authentificate
 		if (oldEmail != userUpdateDto.getEmail()) {
 			refreshAuthentification();
 		}
-		
+		LOGGER.info("Update the profil");		
 		return userRepository.save(userConnected);
 		
 		
@@ -103,7 +108,7 @@ public class UserService {
 	}
 		
 	@Transactional	
-	public User appendConnectionUser(String email) {
+	public User appendConnectionUser(String email){
 		User currentUser = securityService.getCurrentUser();
 		User userAppend = getUserByEmail(email)
 								.orElseThrow(() -> new UserNotFoundException("The user with the email " +  email + " is not found"));
@@ -120,18 +125,33 @@ public class UserService {
 												userAppend.getEmail() + 
 												" in his connection list");
 		}
+		
 		try {
-			currentUser.addConnectionUser(userAppend);
-			LOGGER.info("Connection successfully added  {} -> {}", userAppend.getEmail(), currentUser.getEmail());
-			return userRepository.save(currentUser);
-		}
-		catch (Exception e) {
-			LOGGER.error("emailUser {}", currentUser.getEmail(), e);
+			if (currentUser.addConnectionUser(userAppend)) {
+				LOGGER.info("Connection successfully added  {} -> {}", userAppend.getEmail(), currentUser.getEmail());
+				return userRepository.save(currentUser);
+			}
+			else {
+				LOGGER.info("Connection already exist  {} -> {}", userAppend.getEmail(), currentUser.getEmail());
+				return currentUser;
+			}
+		} catch (RuntimeException e) {
+			LOGGER.error("emailUser {}", currentUser.getEmail());
 			throw new UserAppendConnectionError("Fail to append the user " +
 												userAppend.getEmail() +
 												" to the connection list of" +  
 												currentUser.getEmail());
+			
 		}
+		
+		
+		
+		
+		
+		
+	
+		
+		
 	
 	}
 	

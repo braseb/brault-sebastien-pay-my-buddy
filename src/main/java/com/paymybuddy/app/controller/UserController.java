@@ -5,6 +5,8 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,12 +15,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.paymybuddy.app.dto.UserDto;
+import com.paymybuddy.app.dto.UserUpdateDto;
 import com.paymybuddy.app.dto.mapping.UserMapping;
+import com.paymybuddy.app.exception.UserAppendConnectionError;
+import com.paymybuddy.app.exception.UserNotFoundException;
 import com.paymybuddy.app.model.User;
 import com.paymybuddy.app.service.UserService;
+
+import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 
 @Controller
+//@Validated
 //@RestController
 public class UserController {
 
@@ -49,30 +59,39 @@ public class UserController {
 	public String getProfile(Model model) {
 		LOGGER.info("get profile user");
 		User user = userService.getCurrentUser();
-		model.addAttribute("user", user);
+		UserUpdateDto dto = new UserUpdateDto(user.getUsername(), user.getEmail(), null, null);
+	    model.addAttribute("userUpdateDto", dto);
+		//model.addAttribute("user", user);
 		return "profile";
 	}
 	
 	@PutMapping("/profile")
-	public String updateProfile(Model model, @ModelAttribute UserDto userDto) {
+	public String updateProfile(Model model, 
+								@Valid @ModelAttribute UserUpdateDto userUpdateDto, 
+								BindingResult bindingResult, 
+								RedirectAttributes redirectAttributes) {
 		LOGGER.info("update profile user");
-		User userConnected = userService.getCurrentUser();
-		String oldEmail = userConnected.getEmail();
-				
-		userConnected.setEmail(userDto.getEmail());
-		if (userDto.getPassword().length() > 0) {
-			userConnected.setPassword(userDto.getPassword());
-		}
-		userConnected.setUsername(userDto.getUsername());
-				
-		userService.updateUser(userConnected);
-		if (oldEmail != userDto.getEmail()) {
-			userService.refreshAuthentification();
+		if (bindingResult.hasErrors()) {
+			bindingResult.getFieldErrors().forEach(fe -> 
+													LOGGER.error(fe.getField(), fe.getDefaultMessage()));
+		
+			User user = userService.getCurrentUser();
+			model.addAttribute("user", user);
+			return "profile";
 		}
 		
+		try {
+			userService.updateUser(userUpdateDto);
+		} 
+		catch(IllegalArgumentException e) {
+			LOGGER.error("Illegal argument", e);
+			redirectAttributes.addFlashAttribute("error", e.getMessage());
+		}
+		catch (Exception e) {
+			throw e;
+		}
 		
 		return "redirect:/profile";
-		
 	}
 	
 	@GetMapping("/register")
@@ -83,6 +102,8 @@ public class UserController {
 	@PostMapping("/register")
 	public String createProfil(@Valid @ModelAttribute UserDto userDto, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 		if (bindingResult.hasErrors()){
+			bindingResult.getFieldErrors().forEach(fe -> 
+											LOGGER.error(fe.getField(), fe.getDefaultMessage()));
 			return "register";
 		}
 		
@@ -91,17 +112,52 @@ public class UserController {
 		return "redirect:/login";
 	}
 	
-	@GetMapping("/connection")
+	/*@GetMapping("/connection")
 	public String connectionUser() {
 		return "connection";
 	}
 	
 	@PostMapping("/add_user_connection")
-	public String addConnectionUser(@RequestParam(required = true) String email) {
+	public String addConnectionUser(@RequestParam(required = true)
+									@NotBlank(message = "Email is required")
+    								@Email(message = "L'Email is not valid")
+									String email, 
+									RedirectAttributes redirectAttributes) {
 		LOGGER.info("append user connection");
-		userService.appendConnectionUser(email);
-		return "connection";
-	}
+		try {
+			userService.appendConnectionUser(email);
+			redirectAttributes.addFlashAttribute("successMessage", "Connection append successfull !");
+			LOGGER.info("User with the email {} is append with success", email);
+			
+		} 
+		catch (UserAppendConnectionError e) {
+			redirectAttributes.addFlashAttribute("emailError", e.getMessage());
+			LOGGER.error("The User with the email {} already exist", email, e);
+		}
+		
+		catch (RuntimeException ex) {
+			throw ex;
+		}
+		
+		return "redirect:/connection";
+	}*/
+	
+	 /*@ExceptionHandler(ConstraintViolationException.class)
+	    public String handleValidationError(ConstraintViolationException ex, RedirectAttributes redirectAttributes) {
+	     redirectAttributes.addFlashAttribute("emailError",
+	                ex.getConstraintViolations().iterator().next().getMessage());
+	        LOGGER.error("The email is not valid", ex);
+	        return "redirect:/connection";
+	    }*/
+	 
+	 @ExceptionHandler(UserNotFoundException.class)
+	 public String userNotFoundError(UserNotFoundException ex, RedirectAttributes redirectAttributes) {
+		 redirectAttributes.addFlashAttribute("emailError",
+	                ex.getMessage());
+		 LOGGER.error("User not found", ex);   
+		 return "redirect:/connection";
+	 }
+	
 	
 	
 }
