@@ -5,6 +5,7 @@
 		<meta charset="utf-8">
 		<link rel="stylesheet" href="/style/header.css">
 		<link rel="stylesheet" href="/style/connection.css">
+		<link rel="stylesheet" href="/style/message.css">
 		<title>Connection</title>
 		
 	</head>
@@ -14,9 +15,12 @@
 		<div th:replace="~{fragments/header :: header}">...</div>
 		<main>	
 			<form class="formulaire" th:action="@{/add_user_connection}" method="post">
+				
 				<div class="labelMail">
+					<div class="messageError" th:if="${emailError}" th:text="${emailError}"></div>
+					<div class="messageOk" th:if="${successMessage}" th:text="${successMessage}"></div>
 					<label for="email">Chercher une relation</label>
-					<input type="text" id="email" name="email" placeholder="Saisir une addresse email" />
+					<input type="email" id="email" name="email" placeholder="Saisir une addresse email" />
 				</div>
 				<div id="divButton">
 					<input id="appendButton" type="submit" value="Ajouter">
