@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.paymybuddy.app.dto.UserUpdateDto;
 import com.paymybuddy.app.exception.UserAlreadyExistException;
 import com.paymybuddy.app.exception.UserAppendConnectionError;
 import com.paymybuddy.app.exception.UserNotFoundException;
@@ -60,15 +61,32 @@ public class UserService {
 		
 	}
 	
-	public User updateUser(User user) {
-			
-		if (userRepository.existsById(user.getId())){
-			user.setPassword(passwordEncoder.encode(user.getPassword()));
-			return userRepository.save(user);
+	public User updateUser(UserUpdateDto userUpdateDto) {
+		User userConnected = getCurrentUser();
+		String oldEmail = userConnected.getEmail();
+		userConnected.setEmail(userUpdateDto.getEmail());
+		userConnected.setUsername(userUpdateDto.getUsername());
+		
+		String newPassword = userUpdateDto.getNewPassword();
+		String oldPassword = userUpdateDto.getOldPassword();
+		//update password only if the length of the old or the new is > 0
+		if (newPassword.length() > 0 || oldPassword.length() > 0) {
+			if (!passwordEncoder.matches(oldPassword, userConnected.getPassword())) {
+				throw new IllegalArgumentException("The old password is not correct");
+			}
+			userConnected.setPassword(passwordEncoder.encode(userUpdateDto.getNewPassword()));
 		}
-		else {
-			throw new UserNotFoundException("The user with the email " +  user.getEmail() + " is not found");
+				
+		//refresh the authentification for take the new email as username authentificate
+		if (oldEmail != userUpdateDto.getEmail()) {
+			refreshAuthentification();
 		}
+		
+		return userRepository.save(userConnected);
+		
+		
+		
+		
 	}
 	
 	

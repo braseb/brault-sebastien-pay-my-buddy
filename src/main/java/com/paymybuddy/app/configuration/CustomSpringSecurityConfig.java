@@ -13,11 +13,7 @@ import org.springframework.web.filter.HiddenHttpMethodFilter;
 @EnableWebSecurity
 public class CustomSpringSecurityConfig {
     
-	//@Autowired
-	//CustomUserDetailsService customUserDetailsService;
-	
-	
-	
+		
 	@Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests(auth -> {

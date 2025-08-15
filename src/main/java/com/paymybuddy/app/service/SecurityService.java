@@ -8,6 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import com.paymybuddy.app.exception.UserNotFoundException;
 import com.paymybuddy.app.model.User;
 import com.paymybuddy.app.repository.UserRepository;
 
@@ -36,11 +37,11 @@ public class SecurityService {
 	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
 	    if (auth != null && auth.isAuthenticated()) {
-	        String email = auth.getName(); // ou getPrincipal().getUsername()
+	        String email = auth.getName();
 	        return userRepository.findByEmail(email)
-	                .orElseThrow(() -> new RuntimeException("Utilisateur introuvable en base"));
+	                .orElseThrow(() -> new UserNotFoundException("The user with the email " +  email + " is not found"));
 	    }
 
-	    throw new RuntimeException("Utilisateur non connecté");
+	    throw new RuntimeException("No user connected");
 	}
 }
