@@ -52,10 +52,12 @@ public class User {
 			mappedBy = "userSender")
 	private List<Transaction> transactionsSend;
 	
-	public void addConnectionUser(User user) {
+	public boolean addConnectionUser(User user) {
 		if (!connectionUser.contains(user)) {
 			connectionUser.add(user);
+			return true;
 		}
+		return false;
 		
 		//user.getConnectionUser().add(this);
 	}
