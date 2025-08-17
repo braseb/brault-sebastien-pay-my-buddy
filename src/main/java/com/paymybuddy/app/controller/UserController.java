@@ -100,7 +100,9 @@ public class UserController {
 	}
 	
 	@PostMapping("/register")
-	public String createProfil(@Valid @ModelAttribute UserDto userDto, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+	public String createProfil(@Valid @ModelAttribute UserDto userDto, 
+								BindingResult bindingResult, 
+								RedirectAttributes redirectAttributes) {
 		if (bindingResult.hasErrors()){
 			bindingResult.getFieldErrors().forEach(fe -> 
 											LOGGER.error(fe.getField(), fe.getDefaultMessage()));
