@@ -17,7 +17,7 @@
 			
 			<form th:action=@{/login} method="post" class="formulaire">
 				<div th:if="${param.error}">
-		    		<p class="messageError"> Email ou mot de passe invalide.</p>
+		    		<p class="messageError"> Email or password is invalid.</p>
 				</div>
 				<div th:if="${param.logout}">
 					<p class="messageError">You have been logged out.</p>
