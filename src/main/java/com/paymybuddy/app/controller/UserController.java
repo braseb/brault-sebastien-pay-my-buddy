@@ -5,7 +5,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -17,15 +16,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.paymybuddy.app.dto.UserDto;
 import com.paymybuddy.app.dto.UserUpdateDto;
 import com.paymybuddy.app.dto.mapping.UserMapping;
-import com.paymybuddy.app.exception.UserAppendConnectionError;
-import com.paymybuddy.app.exception.UserNotFoundException;
+import com.paymybuddy.app.exception.UserAlreadyExistException;
 import com.paymybuddy.app.model.User;
 import com.paymybuddy.app.service.UserService;
-
-import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
+
 
 @Controller
 //@Validated
@@ -44,8 +39,12 @@ public class UserController {
 	
 		
 	@GetMapping("/login")
-	public String login(Model model) {
-		return "login";
+	public String login(@RequestParam(required = false) String error, Model model) {
+		if (error != null) {
+		    LOGGER.error("Email or password is invalid");
+		   
+		}
+	    return "login";
 	}
 		
 	/*@PostMapping("/login")
@@ -67,13 +66,13 @@ public class UserController {
 	
 	@PutMapping("/profile")
 	public String updateProfile(Model model, 
-								@Valid @ModelAttribute UserUpdateDto userUpdateDto, 
-								BindingResult bindingResult, 
-								RedirectAttributes redirectAttributes) {
+        				@Valid @ModelAttribute UserUpdateDto userUpdateDto, 
+        				BindingResult bindingResult, 
+        				RedirectAttributes redirectAttributes) {
 		LOGGER.info("update profile user");
 		if (bindingResult.hasErrors()) {
 			bindingResult.getFieldErrors().forEach(fe -> 
-													LOGGER.error(fe.getField(), fe.getDefaultMessage()));
+								LOGGER.error(fe.getField(), fe.getDefaultMessage()));
 		
 			User user = userService.getCurrentUser();
 			model.addAttribute("user", user);
@@ -112,6 +111,7 @@ public class UserController {
 		userService.createUser(UserMapping.mapToUser(userDto));
 		redirectAttributes.addFlashAttribute("successCreate", "User create with success");
 		return "redirect:/login";
+		
 	}
 	
 	/*@GetMapping("/connection")
@@ -152,12 +152,20 @@ public class UserController {
 	        return "redirect:/connection";
 	    }*/
 	 
-	 @ExceptionHandler(UserNotFoundException.class)
+	 /*@ExceptionHandler(UserNotFoundException.class)
 	 public String userNotFoundError(UserNotFoundException ex, RedirectAttributes redirectAttributes) {
-		 redirectAttributes.addFlashAttribute("emailError",
+		 redirectAttributes.addFlashAttribute("globalError",
 	                ex.getMessage());
 		 LOGGER.error("User not found", ex);   
 		 return "redirect:/connection";
+	 }*/
+	 
+	 @ExceptionHandler(UserAlreadyExistException.class)
+	 public String userNotFoundError(UserAlreadyExistException ex, RedirectAttributes redirectAttributes) {
+		 redirectAttributes.addFlashAttribute("globalError",
+	                ex.getMessage());
+		 LOGGER.error("User already exist", ex);   
+		 return "redirect:/register";
 	 }
 	
 	

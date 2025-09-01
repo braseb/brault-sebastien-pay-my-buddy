@@ -41,7 +41,7 @@ public class ConnectionController {
     								@Email(message = "L'Email is not valid")
 									String email, 
 									RedirectAttributes redirectAttributes) {
-		LOGGER.info("append user connection");
+		LOGGER.info("Append user connection");
 		try {
 			userService.appendConnectionUser(email);
 			redirectAttributes.addFlashAttribute("successMessage", "Connection append successfull !");
@@ -50,11 +50,11 @@ public class ConnectionController {
 		} 
 		catch (UserAppendConnectionError e) {
 			redirectAttributes.addFlashAttribute("emailError", e.getMessage());
-			LOGGER.error("The User with the email {} already exist", email, e);
+			LOGGER.error("The user with the email {} already exist", email, e);
 		}
 		
 		catch (RuntimeException ex) {
-			throw ex;
+		    throw ex;
 		}
 		
 		return "redirect:/connection";

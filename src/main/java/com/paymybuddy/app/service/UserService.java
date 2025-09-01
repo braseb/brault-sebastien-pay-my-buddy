@@ -47,14 +47,20 @@ public class UserService {
 		return securityService.getCurrentUser();
 	}
 	
-	public void refreshAuthentification() {
-		securityService.refreshAuthentification();
+	public void refreshAuthentification(String email) {
+		securityService.refreshAuthentification(email);
 	}
 	
 		
 	public User createUser(User user) {
-		if (userRepository.existsById(user.getId())){
-			throw new UserAlreadyExistException("The user with the email " +  user.getEmail() + " already exist");
+		LOGGER.info("Create user service");
+		//Creer un existsByEmail
+		LOGGER.info(user.getEmail());
+		LOGGER.info(userRepository.existsByEmail((user.getEmail())));
+		if (userRepository.existsByEmail(user.getEmail())){
+			UserAlreadyExistException userAlreadyExistException = new UserAlreadyExistException("The user with the email " +  user.getEmail() + " already exist");
+			LOGGER.error("The user alreadyExist", userAlreadyExistException);
+			throw userAlreadyExistException;
 		}
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		return userRepository.save(user);
@@ -81,13 +87,18 @@ public class UserService {
 			}
 		}
 		
+		LOGGER.info("Update the profil"); 
+		User newUSer = userRepository.save(userConnected);
 		
-		//refresh the authentification for take the new email as username authentificate
-		if (oldEmail != userUpdateDto.getEmail()) {
-			refreshAuthentification();
-		}
-		LOGGER.info("Update the profil");		
-		return userRepository.save(userConnected);
+        //refresh the authentification for take the new email as username authentificate
+        if (oldEmail != userUpdateDto.getEmail()) {
+            refreshAuthentification(userUpdateDto.getEmail());
+            LOGGER.info("Authentification refresh");
+        }
+        LOGGER.info("Profil update with success");
+        return newUSer;
+			
+		
 		
 		
 		

@@ -16,10 +16,13 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "users")
@@ -35,6 +38,12 @@ public class User {
 	private String email;
 	
 	private String password;
+	
+	public User(String username, String email, String password){
+		this.username = username;
+		this.email=email;
+		this.password=password;
+	}
 	
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "user_connection",

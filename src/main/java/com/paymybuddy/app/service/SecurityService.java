@@ -20,11 +20,11 @@ public class SecurityService {
     @Autowired
     private UserRepository userRepository;
 
-    public void refreshAuthentification() {
+    public void refreshAuthentification(String email) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = getCurrentUser();
+        //User user = getCurrentUser();
 
-        UserDetails updatedUserDetails = customUserDetailsService.loadUserByUsername(user.getEmail());
+        UserDetails updatedUserDetails = customUserDetailsService.loadUserByUsername(email);
 
         Authentication newAuth = new UsernamePasswordAuthenticationToken(
                 updatedUserDetails, authentication.getCredentials(), updatedUserDetails.getAuthorities());
