@@ -19,6 +19,8 @@ import com.paymybuddy.app.dto.mapping.UserMapping;
 import com.paymybuddy.app.exception.UserAlreadyExistException;
 import com.paymybuddy.app.model.User;
 import com.paymybuddy.app.service.UserService;
+
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 
@@ -78,18 +80,8 @@ public class UserController {
 			model.addAttribute("user", user);
 			return "profile";
 		}
-		
-		try {
-			userService.updateUser(userUpdateDto);
-		} 
-		catch(IllegalArgumentException e) {
-			LOGGER.error("Illegal argument", e);
-			redirectAttributes.addFlashAttribute("error", e.getMessage());
-		}
-		catch (Exception e) {
-			throw e;
-		}
-		
+				
+		userService.updateUser(userUpdateDto);
 		return "redirect:/profile";
 	}
 	
@@ -160,14 +152,30 @@ public class UserController {
 		 return "redirect:/connection";
 	 }*/
 	 
-	 @ExceptionHandler(UserAlreadyExistException.class)
-	 public String userNotFoundError(UserAlreadyExistException ex, RedirectAttributes redirectAttributes) {
-		 redirectAttributes.addFlashAttribute("globalError",
-	                ex.getMessage());
-		 LOGGER.error("User already exist", ex);   
-		 return "redirect:/register";
-	 }
+    @ExceptionHandler(IllegalArgumentException.class)
+    public String handleIllegalArgument(IllegalArgumentException ex,
+                                        RedirectAttributes redirectAttributes,
+                                        HttpServletRequest request) {
+        redirectAttributes.addFlashAttribute("globalError", ex.getMessage());
+        LOGGER.info("Illegal except");
+        LOGGER.error(ex.getMessage(), ex);
+        return "redirect:/profile";
+    }
 	
+     @ExceptionHandler(UserAlreadyExistException.class)
+     public String userNotFoundError(UserAlreadyExistException ex, 
+                                     RedirectAttributes redirectAttributes,
+                                     HttpServletRequest request) {
+    	 redirectAttributes.addFlashAttribute("globalError",
+                ex.getMessage());
+     LOGGER.error("User already exist", ex);   
+     String from = request.getParameter("from");
+     if (from.equals("profile")) {
+         return "redirect:/profile";
+     }
+     return "redirect:/register";
+     }
+    	
 	
 	
 }

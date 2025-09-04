@@ -80,10 +80,10 @@ public class UserControllerIT {
         
     }
     
- // /profile PUT success
+ // /profile PUT success without password change
     @Test
-    @DisplayName("PUT /profile with valid dto should redirect to /profile")
-    void updateProfileSuccess() throws Exception {
+    @DisplayName("PUT /profile with valid dto and no password change should redirect to /profile")
+    void updateProfileSuccessNoPasswordChange() throws Exception {
     	    	
     	mockMvc.perform(put("/profile")
                                 .with(user(john.getEmail()))
@@ -100,6 +100,28 @@ public class UserControllerIT {
     	assertEquals("johnNouveau", userRepository.findByEmail(john.getEmail()).orElseThrow().getUsername());
     	
     }
+    
+ // /profile PUT success with password change
+    @Test
+    @DisplayName("PUT /profile with valid dto and no password change should redirect to /profile")
+    void updateProfileSuccessWithPasswordChange() throws Exception {
+                
+        mockMvc.perform(put("/profile")
+                                .with(user(john.getEmail()))
+                                .with(csrf())
+                                .param("username", "johnNouveau")
+                                .param("email", "johnNouveau@mail.com")
+                                .param("oldPassword", "secret")
+                                .param("newPassword", "secret1"))
+                        .andDo(print())        
+                        .andExpect(status().is3xxRedirection())
+                        .andExpect(redirectedUrl("/profile"));
+                        
+        assertEquals("johnNouveau@mail.com", userRepository.findByEmail("johnNouveau@mail.com").orElseThrow().getEmail());
+        assertEquals("johnNouveau", userRepository.findByEmail(john.getEmail()).orElseThrow().getUsername());
+        
+    }
+    
     
  //  /profile PUT with validation error
     @Test
@@ -161,10 +183,11 @@ public class UserControllerIT {
                         .param("username", "john")
                         .param("email", "john@mail.com")
                         .param("newPassword", "123")
-                        .param("oldPassword", "123"))
+                        .param("oldPassword", "123")
+                        .param("from", "profile"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(flash().attributeExists("error"))
-                .andExpect(flash().attribute("error", "The old password is not correct"))
+                .andExpect(flash().attributeExists("globalError"))
+                .andExpect(flash().attribute("globalError", "The old password is not correct"))
                 .andExpect(redirectedUrl("/profile"));
        
        
@@ -181,7 +204,8 @@ public class UserControllerIT {
                     .with(csrf())
                         .param("username", john.getUsername())
                         .param("email", john.getEmail())
-                        .param("password", john.getPassword()))
+                        .param("password", john.getPassword())
+                        .param("from", "register"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(flash().attributeExists("globalError"))
                 .andExpect(flash().attribute("globalError", "The user with the email " + john.getEmail() + " already exist"))

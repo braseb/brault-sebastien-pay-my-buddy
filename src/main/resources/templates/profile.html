@@ -16,6 +16,7 @@
 			<form class="formulaire" th:action="@{/profile}" method="post" th:object="${userUpdateDto}">
 	    		<div class="infosFormulaire">
 		    		<input type="hidden" name="_method" value="put"/>
+		    		<input type="hidden" name="from" value="profile">
 		    		<div class="messageError" th:if="${globalError}" th:text="${globalError}"></div>
 		    		<div class="messageError" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
 		    		<div class="labelValue">

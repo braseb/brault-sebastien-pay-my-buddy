@@ -1,6 +1,7 @@
 package com.paymybuddy.app.controller;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -22,6 +23,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -53,6 +55,9 @@ public class UserControllerTest {
     
     @MockitoBean
     private CustomUserDetailsService customUserDetailsService;
+    
+    @MockitoBean
+    private BCryptPasswordEncoder passwordEncoder;
     
     
     
@@ -93,14 +98,16 @@ public class UserControllerTest {
         				.with(csrf())
         				.param("username", "john")
                         .param("email", "john@mail.com")
-                        .param("oldPassword", "")
-                        .param("newPassword", ""))
+                        .param("oldPassword", "1234")
+                        .param("newPassword", "1234"))
         		.andDo(print())        
         		.andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/profile"));
     	
     	verify(userService, times(1)).updateUser(any(UserUpdateDto.class));
     }
+    
+ 
 
     //  /profile PUT with validation error
     @Test
@@ -171,16 +178,17 @@ public class UserControllerTest {
     	doThrow(new IllegalArgumentException("The old password is not correct"))
         .when(userService).updateUser(any(UserUpdateDto.class));
 
-        mockMvc.perform(put("/profile")
+        mockMvc.perform(post("/profile")
     				.with(user("john@mail.com"))
     				.with(csrf())
+    				    .param("_method", "put")  // nécessaire pour HiddenHttpMethodFilter
                         .param("username", "john")
                         .param("email", "john@mail.com")
                         .param("newPassword", "123")
                         .param("oldPassword", "123"))
                 .andExpect(status().is3xxRedirection())
-        		.andExpect(flash().attributeExists("error"))
-        		.andExpect(flash().attribute("error", "The old password is not correct"))
+        		.andExpect(flash().attributeExists("globalError"))
+        		.andExpect(flash().attribute("globalError", "The old password is not correct"))
                 .andExpect(redirectedUrl("/profile"));
         
         
@@ -197,7 +205,8 @@ public class UserControllerTest {
         			.with(csrf())
                         .param("username", "john")
                         .param("email", "john@mail.com")
-                        .param("password", "secret"))
+                        .param("password", "secret")
+                        .param("from", "register"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(flash().attributeExists("globalError"))
                 .andExpect(flash().attribute("globalError", "Already exists"))
