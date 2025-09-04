@@ -39,7 +39,7 @@ public class TransactionService {
 	@Transactional
 	public Transaction saveTransaction(TransactionFormDto transactionFormDto) {
 		User user = userService.getCurrentUser();
-		
+				
 		User userReceiver = userService.getUserByEmail(transactionFormDto.getEmail())
 										.orElseThrow(() -> new UsernameNotFoundException("User not found"));
 		LOGGER.info("user sender : {}", userReceiver.getEmail());
@@ -51,6 +51,14 @@ public class TransactionService {
 		transaction.setDescription(transactionFormDto.getDescription());
 		
 		LOGGER.info("montant transaction : {}", transaction.getAmount());
+		//user.setCapital(user.getCapital() - transactionFormDto.getAmount());
+		//userService.updateCapital(user.getEmail(), transactionFormDto.getAmount());
+		
+		// Debit sender
+	    //userSender.setCapital(userSender.getCapital() - transactionFormDto.getAmount());
+
+	    // Credit receiver
+	    //userReceiver.setCapital(userReceiver.getCapital() + transactionFormDto.getAmount());
 		return transactionRepository.save(transaction);
 	}
 }

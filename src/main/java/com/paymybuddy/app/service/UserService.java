@@ -54,7 +54,6 @@ public class UserService {
 		
 	public User createUser(User user) {
 		LOGGER.info("Create user service");
-		//Creer un existsByEmail
 		LOGGER.info(user.getEmail());
 		LOGGER.info(userRepository.existsByEmail((user.getEmail())));
 		if (userRepository.existsByEmail(user.getEmail())){
@@ -68,8 +67,18 @@ public class UserService {
 	}
 	
 	public User updateUser(UserUpdateDto userUpdateDto) {
-		User userConnected = getCurrentUser();
-		String oldEmail = userConnected.getEmail();
+	    
+	    User userConnected = getCurrentUser();
+	    String newEmail = userUpdateDto.getEmail();
+	    String oldEmail = userConnected.getEmail();
+	    
+	    //check if user already exist
+	    if (!newEmail.equals(oldEmail) && userRepository.existsByEmail(newEmail)){
+            UserAlreadyExistException userAlreadyExistException = new UserAlreadyExistException("The user with the email " +  newEmail + " already exist");
+            LOGGER.error("The user alreadyExist", userAlreadyExistException);
+            throw userAlreadyExistException;
+        }
+	    	    
 		userConnected.setEmail(userUpdateDto.getEmail());
 		userConnected.setUsername(userUpdateDto.getUsername());
 		
@@ -155,12 +164,11 @@ public class UserService {
 			
 		}
 		
-		
-		
-		
-		
-		
+	}
 	
+	
+	public Integer updateCapital(String email, Double debit) {
+	    return userRepository.updateCapital(email, debit);
 		
 		
 	
