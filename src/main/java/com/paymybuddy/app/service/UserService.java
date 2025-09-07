@@ -131,12 +131,15 @@ public class UserService {
 	public User appendConnectionUser(String email){
 		User currentUser = securityService.getCurrentUser();
 		User userAppend = getUserByEmail(email)
-								.orElseThrow(() -> new UserNotFoundException("The user with the email " +  email + " is not found"));
+								.orElseThrow(() -> {
+								                        LOGGER.error("User {} is not found", email);
+								                        return new UserNotFoundException("The user with the email " +  email + " is not found");});
+				
+		if (currentUser.getEmail().equals(email)){
+		    LOGGER.error("User {} could not append a connection with him", userAppend.getEmail());
+		    throw new UserAppendConnectionError("User " + currentUser.getEmail() + " could not append a connection with him");
+		}
 		
-		//Hibernate.initialize(currentUser.getConnectionUser()); // Force l'initialisation
-		// Force l'initialisation en accédant à la collection
-    
-		//currentUser.getConnectionUser().forEach(connection -> {});
 		if (currentUser.getConnectionUser().contains(userAppend)) {
 			LOGGER.error("User {} is already a connection of {}", userAppend.getEmail(), currentUser.getEmail());
 			throw new UserAppendConnectionError("The user with the mail " + 

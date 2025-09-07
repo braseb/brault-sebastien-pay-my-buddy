@@ -39,7 +39,8 @@ CREATE TABLE user_connection (
     user_connection_id INTEGER NOT NULL,
     CONSTRAINT pk_user_connections PRIMARY KEY (user_id, user_connection_id),
     CONSTRAINT fk_connection_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    CONSTRAINT fk_connection_partner FOREIGN KEY (user_connection_id) REFERENCES users(id) ON DELETE CASCADE
+    CONSTRAINT fk_connection_partner FOREIGN KEY (user_connection_id) REFERENCES users(id) ON DELETE CASCADE,
+    CONSTRAINT chk_no_self_connection CHECK (user_id <> user_connection_id),
 );
 ```
 
