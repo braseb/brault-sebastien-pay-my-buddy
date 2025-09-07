@@ -16,7 +16,6 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -68,11 +67,10 @@ public class User {
 		}
 		return false;
 		
-		//user.getConnectionUser().add(this);
+		
 	}
 	
 	public void removeConnectionUser(User user) {
-		//user.getConnectionUser().remove(this);
 		connectionUser.remove(user);
 	}
 	

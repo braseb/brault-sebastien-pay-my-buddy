@@ -24,7 +24,7 @@ public class DataSourceConfig {
 
     @Bean
     DataSource dataSource() {
-        String username = keyringProperties.getAccount(); // identifiant récupéré depuis Keyring
+        String username = keyringProperties.getAccount(); // account and password get from Keyring
         String password = keyringService.getPassword(
                 keyringProperties.getService(),
                 keyringProperties.getAccount()

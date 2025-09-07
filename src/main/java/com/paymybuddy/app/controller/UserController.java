@@ -25,8 +25,6 @@ import jakarta.validation.Valid;
 
 
 @Controller
-//@Validated
-//@RestController
 public class UserController {
 
     private final UserService userService;
@@ -38,7 +36,6 @@ public class UserController {
         this.userService = userService;
         
     }
-	
 		
 	@GetMapping("/login")
 	public String login(@RequestParam(required = false) String error, Model model) {
@@ -49,13 +46,6 @@ public class UserController {
 	    return "login";
 	}
 		
-	/*@PostMapping("/login")
-	public String postLoging(@RequestParam String email, @RequestParam String password) {
-		LOGGER.info("email : {}", email);
-		LOGGER.info("password : {}", password);
-		return "login";
-	}*/
-	
 	@GetMapping("/profile")
 	public String getProfile(Model model) {
 		LOGGER.info("get profile user");
@@ -105,53 +95,7 @@ public class UserController {
 		return "redirect:/login";
 		
 	}
-	
-	/*@GetMapping("/connection")
-	public String connectionUser() {
-		return "connection";
-	}
-	
-	@PostMapping("/add_user_connection")
-	public String addConnectionUser(@RequestParam(required = true)
-									@NotBlank(message = "Email is required")
-    								@Email(message = "L'Email is not valid")
-									String email, 
-									RedirectAttributes redirectAttributes) {
-		LOGGER.info("append user connection");
-		try {
-			userService.appendConnectionUser(email);
-			redirectAttributes.addFlashAttribute("successMessage", "Connection append successfull !");
-			LOGGER.info("User with the email {} is append with success", email);
-			
-		} 
-		catch (UserAppendConnectionError e) {
-			redirectAttributes.addFlashAttribute("emailError", e.getMessage());
-			LOGGER.error("The User with the email {} already exist", email, e);
-		}
-		
-		catch (RuntimeException ex) {
-			throw ex;
-		}
-		
-		return "redirect:/connection";
-	}*/
-	
-	 /*@ExceptionHandler(ConstraintViolationException.class)
-	    public String handleValidationError(ConstraintViolationException ex, RedirectAttributes redirectAttributes) {
-	     redirectAttributes.addFlashAttribute("emailError",
-	                ex.getConstraintViolations().iterator().next().getMessage());
-	        LOGGER.error("The email is not valid", ex);
-	        return "redirect:/connection";
-	    }*/
-	 
-	 /*@ExceptionHandler(UserNotFoundException.class)
-	 public String userNotFoundError(UserNotFoundException ex, RedirectAttributes redirectAttributes) {
-		 redirectAttributes.addFlashAttribute("globalError",
-	                ex.getMessage());
-		 LOGGER.error("User not found", ex);   
-		 return "redirect:/connection";
-	 }*/
-	 
+		 
     @ExceptionHandler(IllegalArgumentException.class)
     public String handleIllegalArgument(IllegalArgumentException ex,
                                         RedirectAttributes redirectAttributes,

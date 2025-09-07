@@ -20,14 +20,12 @@ public class CustomSpringSecurityConfig {
 	            	.requestMatchers("/style/**", "/images/**", "/js/**").permitAll()
 	            	.anyRequest().authenticated();
 				})
-                //.formLogin(formLogin -> formLogin.defaultSuccessUrl("/transaction", true))//.permitAll())
                 .formLogin(login -> login.loginPage("/login")
                 					.usernameParameter("email")
                 					.passwordParameter("password")
 			                        .defaultSuccessUrl("/transaction", true)
 			                        .permitAll())
-			                		//.logout(Customizer.withDefaults())
-			                        .build();
+			                		.build();
 
     }
 
@@ -36,14 +34,6 @@ public class CustomSpringSecurityConfig {
         return new BCryptPasswordEncoder();
 
     }
-
-    /*@Bean
-    AuthenticationManager authenticationManager(HttpSecurity http, BCryptPasswordEncoder bCryptPasswordEncoder) throws Exception {
-        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
-        authenticationManagerBuilder.userDetailsService(customUserDetailsService).passwordEncoder(bCryptPasswordEncoder);
-        return authenticationManagerBuilder.build();
-
-    }*/
     
     @Bean
     HiddenHttpMethodFilter hiddenHttpMethodFilter() {

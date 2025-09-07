@@ -42,29 +42,25 @@ public class ConnectionController {
 									String email, 
 									RedirectAttributes redirectAttributes) {
 		LOGGER.info("Append user connection");
-		try {
-			userService.appendConnectionUser(email);
-			redirectAttributes.addFlashAttribute("successMessage", "Connection append successfull !");
-			LOGGER.info("User with the email {} is append with success", email);
-			
-		} 
-		catch (UserAppendConnectionError e) {
-			redirectAttributes.addFlashAttribute("emailError", e.getMessage());
-			LOGGER.error("The user with the email {} already exist", email, e);
-		}
 		
-		catch (RuntimeException ex) {
-		    throw ex;
-		}
-		
+		userService.appendConnectionUser(email);
+		redirectAttributes.addFlashAttribute("successMessage", "Connection append successfull !");
+		LOGGER.info("User with the email {} is append with success", email);
+				
 		return "redirect:/connection";
 	}
+	
+	@ExceptionHandler(UserAppendConnectionError.class)
+	    public String UserAppendConnectionErrorException(UserAppendConnectionError ex, RedirectAttributes redirectAttributes) {
+	        redirectAttributes.addFlashAttribute("emailError", ex.getMessage());
+	        return "redirect:/connection";
+	    }
+	
 	
 	 @ExceptionHandler(ConstraintViolationException.class)
 	    public String handleValidationError(ConstraintViolationException ex, RedirectAttributes redirectAttributes) {
 	     redirectAttributes.addFlashAttribute("emailError",
 	                ex.getConstraintViolations().iterator().next().getMessage());
-	        LOGGER.error("The email is not valid", ex);
 	        return "redirect:/connection";
 	    }
 	 
@@ -72,7 +68,6 @@ public class ConnectionController {
 	 public String userNotFoundError(UserNotFoundException ex, RedirectAttributes redirectAttributes) {
 		 redirectAttributes.addFlashAttribute("emailError",
 	                ex.getMessage());
-		 LOGGER.error("User not found", ex);   
 		 return "redirect:/connection";
 	 }
 	
