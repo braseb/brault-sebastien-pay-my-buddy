@@ -1,0 +1,16 @@
+/* Dégradé pour le texte */
+.gradient-text {
+  background: linear-gradient(90deg, #0ea5e9, #fb923c);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.btn-blue {
+  background-color: #0ea5e9;
+  color: #fff;
+}
+.btn-blue:hover {
+  background-color: #0c87bb;
+  color: #fff;
+}

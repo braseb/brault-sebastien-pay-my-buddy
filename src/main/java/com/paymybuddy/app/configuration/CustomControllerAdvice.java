@@ -19,10 +19,10 @@ public class CustomControllerAdvice {
 		return httpServletRequest.getRequestURI();
 	}
 	
-	@ExceptionHandler(Exception.class) // attrape toutes les exceptions non gérées
+	/*@ExceptionHandler(Exception.class) // attrape toutes les exceptions non gérées
     public String handleUnexpectedException(Exception ex, Model model) {
         model.addAttribute("errorMessage", "An unexpected error has occurred. Please try again later.");
         LOGGER.error("An unexpected error has occurred.", ex);
         return "error";
-    }
+    }*/
 }

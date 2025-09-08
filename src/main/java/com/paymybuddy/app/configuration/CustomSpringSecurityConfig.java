@@ -17,7 +17,7 @@ public class CustomSpringSecurityConfig {
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests(auth -> {
 	            auth.requestMatchers("/login", "/register").permitAll()
-	            	.requestMatchers("/style/**", "/images/**", "/js/**").permitAll()
+	                .requestMatchers("/style/**", "/images/**", "/js/**").permitAll()
 	            	.anyRequest().authenticated();
 				})
                 .formLogin(login -> login.loginPage("/login")
