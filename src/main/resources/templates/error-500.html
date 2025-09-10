@@ -1,10 +1,21 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="fr">
 <head>
-<meta charset="UTF-8">
-<title>What the fuck 500!!!</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>500 — Internal error<</title>
+  <!-- Lien vers le fichier CSS de Bootstrap -->
+  <link href="/style/bootstrap.min.css" rel="stylesheet">
+  <link href="/style/errorcustom.css" rel="stylesheet">
 </head>
-<body>
-    What the fuck 500!!!
+<body class="d-flex align-items-center justify-content-center vh-100 bg-light">
+  <div class="text-center p-5 bg-white rounded-4 shadow-lg" style="max-width: 600px;">
+    <h1 class="display-1 fw-bold gradient-text">500</h1>
+    <h2 class="fw-semibold text-dark">Not Found</h2>
+    <p class="text-muted mt-2">Internal error.</p>
+    <div class="mt-4 d-flex justify-content-center">
+      <a th:href="@{/login}" class="btn btn-blue px-4">Login</a>
+    </div>
+  </div>
 </body>
 </html>

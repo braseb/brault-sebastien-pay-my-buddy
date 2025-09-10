@@ -18,6 +18,7 @@ public class CustomSpringSecurityConfig {
         return http.authorizeHttpRequests(auth -> {
 	            auth.requestMatchers("/login", "/register").permitAll()
 	                .requestMatchers("/style/**", "/images/**", "/js/**").permitAll()
+	                .requestMatchers("/error/**", "/error-403", "/error-404", "/error-500").permitAll()
 	            	.anyRequest().authenticated();
 				})
                 .formLogin(login -> login.loginPage("/login")
