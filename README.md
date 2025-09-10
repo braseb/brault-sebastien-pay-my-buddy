@@ -55,6 +55,32 @@ CREATE TABLE user_connection (
 
 ---
 
+## 🧪 Base de données pour les tests
+
+Pour faciliter les tests et le développement, le projet utilise **H2 Database** en mémoire.
+
+### Configuration dans `application-test.properties` :
+
+```properties
+spring.datasource.url=jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+spring.datasource.driverClassName=org.h2.Driver
+spring.datasource.username=sa
+spring.datasource.password=
+spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
+spring.jpa.hibernate.ddl-auto=create-drop
+spring.jpa.show-sql=true
+spring.main.allow-bean-definition-overriding=true
+spring.h2.console.enabled=true
+```
+
+L’URL jdbc:h2:mem:testdb crée une base en mémoire qui disparaît à l’arrêt de l’application.
+
+spring.h2.console.enabled=true permet d’accéder à la console web H2 pour inspecter les données lors des tests.
+
+Cette configuration est uniquement utilisée pour les tests et le développement. La base PostgreSQL reste la base principale en production.
+
+---
+
 ## Cloner le dépôt :  
 ```bash
 git clone https://github.com/ton-utilisateur/paymybuddy.git
