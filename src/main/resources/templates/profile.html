@@ -1,46 +1,47 @@
 <!DOCTYPE html>
 
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="fr"  xmlns:th="http://www.thymeleaf.org">
 	<head>
 		<meta charset="utf-8">
 		<link rel="stylesheet" href="/style/header.css">
 		<link rel="stylesheet" href="/style/profile.css">
 		<link rel="stylesheet" href="/style/message.css">
-		<title>Transactions</title>
+		<title>Profile</title>
 		
 	</head>
 	
 	<body>
 		<div th:replace="~{fragments/header :: header}">...</div>
+		<h1>Profile</h1>
 		<main>
 			<form class="formulaire" th:action="@{/profile}" method="post" th:object="${userUpdateDto}">
 	    		<div class="infosFormulaire">
 		    		<input type="hidden" name="_method" value="put"/>
 		    		<input type="hidden" name="from" value="profile">
-		    		<div class="messageError" th:if="${globalError}" th:text="${globalError}"></div>
-		    		<div class="messageError" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
+		    		<div role="alert" class="messageError" th:if="${globalError}" th:text="${globalError}"></div>
+		    		<div role="alert" class="messageError" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
 		    		<div class="labelValue">
 		    			<label class="labels" for="username">Username</label>
-		    			<input type="text" id="Username" name="username" autocomplete="username" th:field="*{username}"/>
+		    			<input type="text" id="username" name="username" autocomplete="username" th:field="*{username}"/>
 					</div>
-					<div class="messageError" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+					<div role="alert" class="messageError" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
 					<div class="labelValue">
 						<label class="labels" for="email">Mail</label>
 						<input type="email" id="email" name="email" autocomplete="email" th:field="*{email}"/>
 					</div>
-					<div class="messageError" th:if="${#fields.hasErrors('oldPassword')}" th:errors="*{oldPassword}"></div>
+					<div role="alert" class="messageError" th:if="${#fields.hasErrors('oldPassword')}" th:errors="*{oldPassword}"></div>
 					<div class="labelValue">
-						<label class="labels" for="password">Ancien mot de passe</label>
+						<label class="labels" for="oldPassword">Ancien mot de passe</label>
 						<input type="password" id="oldPassword" name="oldPassword"  placeholder="Ancien mot de passe" autocomplete="current-password"/>
 					</div>
-					<div class="messageError" th:if="${#fields.hasErrors('newPassword')}" th:errors="*{newPassword}"></div>
+					<div role="alert" class="messageError" th:if="${#fields.hasErrors('newPassword')}" th:errors="*{newPassword}"></div>
 					<div class="labelValue">
-						<label class="labels" for="password">Nouveau mot de passe</label>
-						<input type="password" id="password" name="password"  placeholder="Nouveau mot de passe" autocomplete="current-password" th:field="*{newPassword}"/>
+						<label class="labels" for="newPassword">Nouveau mot de passe</label>
+						<input type="password" id="newPassword" name="newPassword"  placeholder="Nouveau mot de passe" autocomplete="current-password" th:field="*{newPassword}"/>
 	    			</div>
 	    		</div>
 	    		<div id="divButton">
-	    			<input id="changedButton" type="submit" name="Modifier" value="Modifier" />
+	    			<button id="changedButton" type="submit" name="Modifier">Modifier</button>
 	    		</div>
 			</form>
 		</main>

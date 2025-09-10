@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
 	<head>
 		<meta charset="utf-8">
 		<link rel="stylesheet" href="/style/header.css">
@@ -11,19 +11,19 @@
 	</head>
 	
 	<body>
-		
 		<div th:replace="~{fragments/header :: header}">...</div>
+		<h1>Connexion</h1>
 		<main>	
 			<form class="formulaire" th:action="@{/add_user_connection}" method="post">
 				
 				<div class="labelMail">
-					<div class="messageError" th:if="${emailError}" th:text="${emailError}"></div>
-					<div class="messageOk" th:if="${successMessage}" th:text="${successMessage}"></div>
+					<div class="messageError" role="alert" th:if="${emailError}" th:text="${emailError}"></div>
+					<div class="messageOk" role="status" th:if="${successMessage}" th:text="${successMessage}"></div>
 					<label for="email">Chercher une relation</label>
-					<input type="email" id="email" name="email" placeholder="Saisir une addresse email" />
+					<input type="email" id="email" name="email" placeholder="Saisir une adresse email" />
 				</div>
 				<div id="divButton">
-					<input id="appendButton" type="submit" value="Ajouter">
+					<button id="appendButton" type="submit">Ajouter</button>
 				</div>
 			</form>
 		</main>

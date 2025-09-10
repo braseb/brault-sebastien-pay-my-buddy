@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html xmlns:th="http://www.thymeleaf.org">
+<html  lang="fr" xmlns:th="http://www.thymeleaf.org">
 	<head>
 		<meta charset="utf-8">
 		<link rel="stylesheet" href="/style/header.css">
@@ -12,25 +12,26 @@
 	
 	<body>
 		<div th:replace="~{fragments/header :: header}">...</div>
+		<h1>Login</h1>
 		<main>
 			
 			
 			<form th:action=@{/login} method="post" class="formulaire">
-				<div th:if="${param.error}">
+				<div role="alert"  th:if="${param.error}">
 		    		<p class="messageError"> Email or password is invalid.</p>
 				</div>
-				<div th:if="${param.logout}">
+				<div role="alert" th:if="${param.logout}">
 					<p class="messageError">You have been logged out.</p>
 				</div>
-				<div th:if="${successCreate}" class="messageOk">
+				<div role="status" th:if="${successCreate}" class="messageOk">
 					<p th:text="${successCreate}"></p>
 				</div>
-				<h1 id="titre" th:text="#{appli.title}"></h1>
+				<p id="titre" th:text="#{appli.title}"></p>
 				<div id="inputFormulaire">
-					<input class="input" type="email" id="email" name="email" autocomplete="email" autofocus="autofocus" placeholder="Mail"/>
-					<input class="input" type="password" id="password" name="password" autocomplete="current-password" placeholder="Mot de passe"/>
+					<input class="input" aria-label="Email" type="email" id="email" name="email" autocomplete="email" autofocus="autofocus" placeholder="Mail"/>
+					<input class="input" aria-label="Mot de passe" type="password" id="password" name="password" autocomplete="current-password" placeholder="Mot de passe"/>
 				</div>	
-				<input id="submiButton" type="submit" value="Se connecter"/>
+				<button id="submiButton" type="submit" value="Se connecter">Se connecter</button>
 			</form>
 		</main>
 	</body>

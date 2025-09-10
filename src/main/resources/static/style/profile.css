@@ -1,3 +1,7 @@
+h1{
+    text-align: center;
+}
+
 html, body {
   height: 100%;
   margin: 0;
@@ -65,7 +69,7 @@ main {
 	
 }
 
-#email, #Username, #password, #oldPassword{
+#email, #username, #newPassword, #oldPassword{
 	border-radius: 5px;
 	height: 45px;
 	width:100%;

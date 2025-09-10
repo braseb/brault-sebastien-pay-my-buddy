@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="fr"  xmlns:th="http://www.thymeleaf.org">
 	<head>
 		<meta charset="utf-8">
 		<link rel="stylesheet" href="/style/header.css">
@@ -12,22 +12,23 @@
 	
 	<body>
 		<div th:replace="~{fragments/header :: header}">...</div>
+		<h1>Enregistrement</h1>
 		<main>
 			<form th:action=@{/register} method="post" class="formulaire" th:object="${userDto}">
-				<h1 id="titre" th:text="#{appli.title}"></h1>
+				<p id="titre" th:text="#{appli.title}"></p>
 				<input type="hidden" name="from" value="register">
 				<div id="inputFormulaire">
-					<div class="messageError" th:if="${globalError}" th:text="${globalError}"></div>
-					<div class="messageError" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
-					<input class="input" th:field="*{username}" type="text" id="username" name="username" autocomplete="username" autofocus="autofocus" placeholder="username"/><br>
-					<div class="messageError" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
-					<input class="input" th:field="*{email}" type="email" id="email" name="email" autocomplete="email" placeholder="Mail"/><br>
-					<div class="messageError" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
-					<input class="input" th:field="*{password}" type="password" id="password" name="password" autocomplete="new-password" placeholder="Mot de passe"/><br>
+					<div role="alert" class="messageError" th:if="${globalError}" th:text="${globalError}"></div>
+					<div role="alert" class="messageError" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
+					<input class="input" th:field="*{username}" aria-label="Nom d'utilisateur" type="text" id="username" name="username" autocomplete="username" autofocus="autofocus" placeholder="username"/><br>
+					<div role="alert" class="messageError" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+					<input class="input" th:field="*{email}" aria-label="Email" type="email" id="email" name="email" autocomplete="email" placeholder="Mail"/><br>
+					<div role="alert" class="messageError" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+					<input class="input" th:field="*{password}" aria-label="Mot de passe" type="password" id="password" name="password" autocomplete="new-password" placeholder="Mot de passe"/><br>
 					
 					
 				</div>
-				<input id="submiButton" type="submit" value="S'inscrire"/>
+				<button id="submiButton" type="submit">S'inscrire</button>
 			</form>
 		</main>
 		

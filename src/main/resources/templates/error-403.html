@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="fr">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>403 — Access Denied<</title>
+  <title>403 — Access Denied</title>
   <!-- Lien vers le fichier CSS de Bootstrap -->
   <link href="/style/bootstrap.min.css" rel="stylesheet">
   <link href="/style/errorcustom.css" rel="stylesheet">
@@ -12,9 +12,9 @@
   <div class="text-center p-5 bg-white rounded-4 shadow-lg" style="max-width: 600px;">
     <h1 class="display-1 fw-bold gradient-text">403</h1>
     <h2 class="fw-semibold text-dark">Access Denied</h2>
-    <p class="text-muted mt-2">You do not have permission to access this page.</p>
+    <p role="alert" class="text-secondary mt-2">You do not have permission to access this page.</p>
     <div class="mt-4 d-flex justify-content-center">
-      <a th:href="@{/login}" class="btn btn-blue px-4">Login</a>
+      <a th:href="@{/login}" class="btn btn-blue px-4">Back to Login</a>
       
                 
     </div>

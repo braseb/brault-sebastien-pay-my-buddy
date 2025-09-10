@@ -12,29 +12,30 @@
 	
 	<body>
 		<div th:replace="~{fragments/header :: header}">...</div>
-		<div th:if="globalError">
+		<h1>Transactions</h1>
+		<div role="alert" th:if="globalError">
 			<p th:text="${globalError}"></p>
 		</div>
 		
 		<form class="formulaire-transaction" th:action="@{/transaction}" method="post" th:object="${transactionFormDto}">
 			<!--  <select th:field="${connectionSelect}">-->
 			<!--  <label for="emailSelect">Sélectionner une relation :</label>-->
-			<div class="messageError" th:if="${#fields.hasErrors('*')}">
+			<div role="alert" class="messageError" th:if="${#fields.hasErrors('*')}">
 				<div th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
 				<div th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}"></div>
 			</div><br>
-			<select id = "emailSelect" name = "emailSelect" th:field="*{email}">
+			<select id = "emailSelect" aria-label="Email relation" aria-required="true" name = "emailSelect" th:field="*{email}">
 				<option class="selectRelation"  value="">Sélectionner une relation</option><!-- selected disabled value="" -->
 				<option class="selectRelation" th:each=" mail: ${listEmail}" th:value="${mail}" th:text="${mail}"></option>
 			</select>
-			<input type="text" id="description" name="description" placeholder="Description" th:field="*{description}"/>
+			<input type="text" id="description" aria-label="Description" name="description" placeholder="Description" th:field="*{description}"/>
 			<div class="montant">
-				   <input type="number" id="amount" name="amount" placeholder="0" min="0.01" step="0.01" th:field="*{amount}">
+				   <input type="number" id="amount" aria-label="Montant" aria-describedby="euro" name="amount" placeholder="0" min="0.01" step="0.01" th:field="*{amount}">
 				     <span>€</span>
 				    
 				  
 			</div>
-			<input id="pay-button" type="submit" value="Payer">
+			<button id="pay-button" type="submit">Payer</button>
 		</form>
 		<br/>
 		<div class="tableau">
