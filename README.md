@@ -52,7 +52,6 @@ CREATE TABLE user_connection (
 - **Transactions valides** : un utilisateur ne peut pas s'envoyer de l'argent à lui-même (`sender_id <> receiver_id`).
 - **Clés étrangères** : toutes les relations sont maintenues avec `ON DELETE CASCADE`.
 - **Connexions directionnelles** : `(1, 2)` est différent de `(2, 1)`, ce qui permet d'avoir des relations asymétriques.
-- **Vérification** : user_id est différent de user_connection_id, un utilisateur ne peut pas s'affecter lui même
 
 ---
 
@@ -85,7 +84,6 @@ ALTER DATABASE paymybuddy SET search_path TO public;
 
 ---
 
-## 🔗 Endpoints
 
 ## 🔗 Endpoints / Routes de l’application
 
