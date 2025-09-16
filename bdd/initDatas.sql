@@ -8,30 +8,31 @@ TRUNCATE TABLE user_connection CASCADE;
 TRUNCATE TABLE users CASCADE;
 
 -- =====================
--- Insertion dans users (20 utilisateurs avec mots de passe BCryptés)
+-- Insertion dans users (20 utilisateurs avec mots de passe BCryptés + balance)
 -- Mot de passe commun en clair : "password123"
 -- =====================
-INSERT INTO users (username, email, password) VALUES
-('alice', 'alice@example.com', '$2a$10$Dow1QXUo4Z9fG3u7t2eJdeRsyM21rK6GxECgGcAQmPglEqSPk1D5G'),
-('bob', 'bob@example.com', '$2a$10$Dow1QXUo4Z9fG3u7t2eJdeRsyM21rK6GxECgGcAQmPglEqSPk1D5G'),
-('charlie', 'charlie@example.com', '$2a$10$Dow1QXUo4Z9fG3u7t2eJdeRsyM21rK6GxECgGcAQmPglEqSPk1D5G'),
-('david', 'david@example.com', '$2a$10$Dow1QXUo4Z9fG3u7t2eJdeRsyM21rK6GxECgGcAQmPglEqSPk1D5G'),
-('eva', 'eva@example.com', '$2a$10$Dow1QXUo4Z9fG3u7t2eJdeRsyM21rK6GxECgGcAQmPglEqSPk1D5G'),
-('frank', 'frank@example.com', '$2a$10$Dow1QXUo4Z9fG3u7t2eJdeRsyM21rK6GxECgGcAQmPglEqSPk1D5G'),
-('grace', 'grace@example.com', '$2a$10$Dow1QXUo4Z9fG3u7t2eJdeRsyM21rK6GxECgGcAQmPglEqSPk1D5G'),
-('henry', 'henry@example.com', '$2a$10$Dow1QXUo4Z9fG3u7t2eJdeRsyM21rK6GxECgGcAQmPglEqSPk1D5G'),
-('irene', 'irene@example.com', '$2a$10$Dow1QXUo4Z9fG3u7t2eJdeRsyM21rK6GxECgGcAQmPglEqSPk1D5G'),
-('jack', 'jack@example.com', '$2a$10$Dow1QXUo4Z9fG3u7t2eJdeRsyM21rK6GxECgGcAQmPglEqSPk1D5G'),
-('karen', 'karen@example.com', '$2a$10$Dow1QXUo4Z9fG3u7t2eJdeRsyM21rK6GxECgGcAQmPglEqSPk1D5G'),
-('leo', 'leo@example.com', '$2a$10$Dow1QXUo4Z9fG3u7t2eJdeRsyM21rK6GxECgGcAQmPglEqSPk1D5G'),
-('mia', 'mia@example.com', '$2a$10$Dow1QXUo4Z9fG3u7t2eJdeRsyM21rK6GxECgGcAQmPglEqSPk1D5G'),
-('nick', 'nick@example.com', '$2a$10$Dow1QXUo4Z9fG3u7t2eJdeRsyM21rK6GxECgGcAQmPglEqSPk1D5G'),
-('olivia', 'olivia@example.com', '$2a$10$Dow1QXUo4Z9fG3u7t2eJdeRsyM21rK6GxECgGcAQmPglEqSPk1D5G'),
-('peter', 'peter@example.com', '$2a$10$Dow1QXUo4Z9fG3u7t2eJdeRsyM21rK6GxECgGcAQmPglEqSPk1D5G'),
-('quinn', 'quinn@example.com', '$2a$10$Dow1QXUo4Z9fG3u7t2eJdeRsyM21rK6GxECgGcAQmPglEqSPk1D5G'),
-('ryan', 'ryan@example.com', '$2a$10$Dow1QXUo4Z9fG3u7t2eJdeRsyM21rK6GxECgGcAQmPglEqSPk1D5G'),
-('sophia', 'sophia@example.com', '$2a$10$Dow1QXUo4Z9fG3u7t2eJdeRsyM21rK6GxECgGcAQmPglEqSPk1D5G'),
-('tom', 'tom@example.com', '$2a$10$Dow1QXUo4Z9fG3u7t2eJdeRsyM21rK6GxECgGcAQmPglEqSPk1D5G');
+INSERT INTO users (username, email, password, account_balance) VALUES
+('alice', 'alice@example.com', '$2a$10$Dow1QXUo4Z9fG3u7t2eJdeRsyM21rK6GxECgGcAQmPglEqSPk1D5G', 152.75),
+('bob', 'bob@example.com', '$2a$10$Dow1QXUo4Z9fG3u7t2eJdeRsyM21rK6GxECgGcAQmPglEqSPk1D5G', 89.30),
+('charlie', 'charlie@example.com', '$2a$10$Dow1QXUo4Z9fG3u7t2eJdeRsyM21rK6GxECgGcAQmPglEqSPk1D5G', 245.10),
+('david', 'david@example.com', '$2a$10$Dow1QXUo4Z9fG3u7t2eJdeRsyM21rK6GxECgGcAQmPglEqSPk1D5G', 67.00),
+('eva', 'eva@example.com', '$2a$10$Dow1QXUo4Z9fG3u7t2eJdeRsyM21rK6GxECgGcAQmPglEqSPk1D5G', 310.55),
+('frank', 'frank@example.com', '$2a$10$Dow1QXUo4Z9fG3u7t2eJdeRsyM21rK6GxECgGcAQmPglEqSPk1D5G', 42.20),
+('grace', 'grace@example.com', '$2a$10$Dow1QXUo4Z9fG3u7t2eJdeRsyM21rK6GxECgGcAQmPglEqSPk1D5G', 198.40),
+('henry', 'henry@example.com', '$2a$10$Dow1QXUo4Z9fG3u7t2eJdeRsyM21rK6GxECgGcAQmPglEqSPk1D5G', 75.90),
+('irene', 'irene@example.com', '$2a$10$Dow1QXUo4Z9fG3u7t2eJdeRsyM21rK6GxECgGcAQmPglEqSPk1D5G', 420.00),
+('jack', 'jack@example.com', '$2a$10$Dow1QXUo4Z9fG3u7t2eJdeRsyM21rK6GxECgGcAQmPglEqSPk1D5G', 134.75),
+('karen', 'karen@example.com', '$2a$10$Dow1QXUo4Z9fG3u7t2eJdeRsyM21rK6GxECgGcAQmPglEqSPk1D5G', 56.80),
+('leo', 'leo@example.com', '$2a$10$Dow1QXUo4Z9fG3u7t2eJdeRsyM21rK6GxECgGcAQmPglEqSPk1D5G', 299.99),
+('mia', 'mia@example.com', '$2a$10$Dow1QXUo4Z9fG3u7t2eJdeRsyM21rK6GxECgGcAQmPglEqSPk1D5G', 88.10),
+('nick', 'nick@example.com', '$2a$10$Dow1QXUo4Z9fG3u7t2eJdeRsyM21rK6GxECgGcAQmPglEqSPk1D5G', 190.25),
+('olivia', 'olivia@example.com', '$2a$10$Dow1QXUo4Z9fG3u7t2eJdeRsyM21rK6GxECgGcAQmPglEqSPk1D5G', 365.50),
+('peter', 'peter@example.com', '$2a$10$Dow1QXUo4Z9fG3u7t2eJdeRsyM21rK6GxECgGcAQmPglEqSPk1D5G', 112.00),
+('quinn', 'quinn@example.com', '$2a$10$Dow1QXUo4Z9fG3u7t2eJdeRsyM21rK6GxECgGcAQmPglEqSPk1D5G', 275.75),
+('ryan', 'ryan@example.com', '$2a$10$Dow1QXUo4Z9fG3u7t2eJdeRsyM21rK6GxECgGcAQmPglEqSPk1D5G', 53.60),
+('sophia', 'sophia@example.com', '$2a$10$Dow1QXUo4Z9fG3u7t2eJdeRsyM21rK6GxECgGcAQmPglEqSPk1D5G', 480.20),
+('tom', 'tom@example.com', '$2a$10$Dow1QXUo4Z9fG3u7t2eJdeRsyM21rK6GxECgGcAQmPglEqSPk1D5G', 142.90);
+
 
 -- =====================
 -- Insertion dans user_connection

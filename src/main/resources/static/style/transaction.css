@@ -18,6 +18,7 @@ body {
 }
 
 
+
 .tableau-transactions{
 	/*width: 100%;*/
 	border-collapse: collapse;
@@ -90,6 +91,7 @@ body {
 	border-style: solid;
 	border-color: gray;
 	background-color: white;
+	border-width: 1px;
 }
 
 .montant{
@@ -109,6 +111,25 @@ body {
     transform: translateY(-50%);
     color: #888;
     pointer-events: none;
+}
+
+#messageGlobalError{
+	align-self: center; /* le bloc garde sa largeur auto */
+    
+}
+
+#accountBalance{
+	align-self: center;
+	padding: 10px 20px;
+    border: 2px solid #4CAF50;
+    border-radius: 8px;
+    background-color: #E8F5E9;
+    font-family: Arial, sans-serif;
+    font-size: 18px;
+    font-weight: bold;
+    color: #2E7D32;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 #pay-button{

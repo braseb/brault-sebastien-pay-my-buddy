@@ -17,7 +17,7 @@ public interface UserRepository extends CrudRepository<User, Integer> {
 	public boolean existsByEmail(String email);
 	
 	@Modifying
-    @Query(value = "UPDATE users SET capital = capital + :amount WHERE email = :email", nativeQuery = true)
+    @Query(value = "UPDATE users SET acountBalance = acountBalance + :amount WHERE email = :email", nativeQuery = true)
     int updateCapital(@Param("email") String email, @Param("amount") Double amount);
 	
 	

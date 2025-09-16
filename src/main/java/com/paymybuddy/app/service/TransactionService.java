@@ -5,15 +5,20 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.paymybuddy.app.dto.TransactionFormDto;
+import com.paymybuddy.app.exception.InsufficientAccountBalance;
 import com.paymybuddy.app.model.Transaction;
 import com.paymybuddy.app.model.User;
 import com.paymybuddy.app.projection.TransactionProjection;
 import com.paymybuddy.app.repository.TransactionRepository;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -36,6 +41,12 @@ public class TransactionService {
 		
 	}
 	
+	private void controlAccountBalance(Double accountBalance, Double amount) throws InsufficientAuthenticationException  {
+	    if (amount > accountBalance) {
+	        throw new InsufficientAccountBalance("Insufficient account balance for do the transaction");
+	    }
+	}
+	
 	@Transactional
 	public Transaction saveTransaction(TransactionFormDto transactionFormDto) {
 		User user = userService.getCurrentUser();
@@ -51,15 +62,17 @@ public class TransactionService {
 		transaction.setDescription(transactionFormDto.getDescription());
 		
 		LOGGER.info("montant transaction : {}", transaction.getAmount());
-		//user.setCapital(user.getCapital() - transactionFormDto.getAmount());
-		//userService.updateCapital(user.getEmail(), transactionFormDto.getAmount());
-		
 		// Debit sender
-	    //userSender.setCapital(userSender.getCapital() - transactionFormDto.getAmount());
+	    Double userAccountBalance = user.getAccountBalance();
+	    
+	    controlAccountBalance(userAccountBalance, transactionFormDto.getAmount());
+		user.setAccountBalance(userAccountBalance - transactionFormDto.getAmount());
 
-	    // Credit receiver
-	    //userReceiver.setCapital(userReceiver.getCapital() + transactionFormDto.getAmount());
+	    //Credit receiver
+	    userReceiver.setAccountBalance(userReceiver.getAccountBalance() + transactionFormDto.getAmount());
 		return transactionRepository.save(transaction);
 	}
+	
+	
 }
 

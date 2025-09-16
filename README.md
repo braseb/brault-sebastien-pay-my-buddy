@@ -14,7 +14,8 @@ CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL
+    password VARCHAR(255) NOT NULL,
+    account_balance DOUBLE PRECISION NOT NULL DEFAULT 0
 );
 
 -- =====================
@@ -137,6 +138,7 @@ ALTER DATABASE paymybuddy SET search_path TO public;
 | `UserNotFoundException`                    | /add_user_connection               | Redirige vers /connection avec message d’erreur     |
 | `UserAlreadyExistException`                | /register ou /profile              | Redirige vers /register ou /profile avec erreur     |
 | `IllegalArgumentException`                 | /profile                           | Redirige vers /profile avec message d’erreur        |
+| `InsufficientAccountBalance`               | /transaction                       | Redirige vers /transaction avec message d’erreur    |
 
 
 ## 🔑 Gestion du mot de passe avec Keyring (Libsecret)

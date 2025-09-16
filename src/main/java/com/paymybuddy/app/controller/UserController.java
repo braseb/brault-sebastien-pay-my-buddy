@@ -41,7 +41,6 @@ public class UserController {
 	public String login(@RequestParam(required = false) String error, Model model) {
 		if (error != null) {
 		    LOGGER.error("Email or password is invalid");
-		   
 		}
 	    return "login";
 	}

@@ -38,6 +38,8 @@ public class User {
 	
 	private String password;
 	
+	private double accountBalance;
+	
 	public User(String username, String email, String password){
 		this.username = username;
 		this.email=email;
@@ -66,8 +68,6 @@ public class User {
 			return true;
 		}
 		return false;
-		
-		
 	}
 	
 	public void removeConnectionUser(User user) {

@@ -13,10 +13,11 @@
 	<body>
 		<div th:replace="~{fragments/header :: header}">...</div>
 		<h1>Transactions</h1>
-		<div role="alert" th:if="globalError">
-			<p th:text="${globalError}"></p>
-		</div>
-		
+		<div role="alert" th:if="${globalError}" th:text="${globalError}" class="messageError" id="messageGlobalError"></div>
+		<div id="accountBalance">
+            <span class="label">Solde disponible :</span>
+            <span class="value" th:text="${accountBalance} +' €'"></span>
+        </div>
 		<form class="formulaire-transaction" th:action="@{/transaction}" method="post" th:object="${transactionFormDto}">
 			<!--  <select th:field="${connectionSelect}">-->
 			<!--  <label for="emailSelect">Sélectionner une relation :</label>-->
