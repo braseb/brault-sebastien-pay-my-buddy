@@ -22,8 +22,7 @@ public class SecurityService {
 
     public void refreshAuthentification(String email) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        //User user = getCurrentUser();
-
+        
         UserDetails updatedUserDetails = customUserDetailsService.loadUserByUsername(email);
 
         Authentication newAuth = new UsernamePasswordAuthenticationToken(

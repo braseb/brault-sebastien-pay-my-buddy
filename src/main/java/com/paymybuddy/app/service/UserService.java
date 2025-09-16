@@ -55,7 +55,6 @@ public class UserService {
 	public User createUser(User user) {
 		LOGGER.info("Create user service");
 		LOGGER.info(user.getEmail());
-		LOGGER.info(userRepository.existsByEmail((user.getEmail())));
 		if (userRepository.existsByEmail(user.getEmail())){
 			UserAlreadyExistException userAlreadyExistException = new UserAlreadyExistException("The user with the email " +  user.getEmail() + " already exist");
 			LOGGER.error("The user alreadyExist", userAlreadyExistException);
@@ -66,17 +65,41 @@ public class UserService {
 		
 	}
 	
+	private void checkUserAlreadyExist(String email) {
+	  //check if the new email user is not already take by another user
+	    if (userRepository.existsByEmail(email)) {
+	        UserAlreadyExistException userAlreadyExistException = new UserAlreadyExistException("The user with the email " +  email + " already exist");
+            LOGGER.error("The user alreadyExist", userAlreadyExistException);
+            throw userAlreadyExistException;
+            
+	    }
+	}
+	
+	private void verifyOldPassword(String oldPassword, String currentHashedPassword) {
+	    if (!passwordEncoder.matches(oldPassword, currentHashedPassword)) {
+	        throw new IllegalArgumentException("The old password is not correct");
+	    }
+	}
+	
+	private void updatePassword(User user, String oldPassword, String newPassword) {
+	  //update password only if the length of the old or the new is > 0
+	    if (newPassword != null && oldPassword != null) {
+	        if (!newPassword.isEmpty() && !oldPassword.isEmpty()) {
+	            verifyOldPassword(oldPassword, user.getPassword());
+	            user.setPassword(passwordEncoder.encode(newPassword));
+	        }
+	    }
+	}
+		
 	public User updateUser(UserUpdateDto userUpdateDto) {
 	    
+	    LOGGER.info("Start update the profil"); 
 	    User userConnected = getCurrentUser();
 	    String newEmail = userUpdateDto.getEmail();
 	    String oldEmail = userConnected.getEmail();
 	    
-	    //check if user already exist
-	    if (!newEmail.equals(oldEmail) && userRepository.existsByEmail(newEmail)){
-            UserAlreadyExistException userAlreadyExistException = new UserAlreadyExistException("The user with the email " +  newEmail + " already exist");
-            LOGGER.error("The user alreadyExist", userAlreadyExistException);
-            throw userAlreadyExistException;
+	    if (!newEmail.equals(oldEmail)){
+           checkUserAlreadyExist(newEmail);
         }
 	    	    
 		userConnected.setEmail(userUpdateDto.getEmail());
@@ -84,19 +107,10 @@ public class UserService {
 		
 		String newPassword = userUpdateDto.getNewPassword();
 		String oldPassword = userUpdateDto.getOldPassword();
-		//update password only if the length of the old or the new is > 0
-		if (newPassword != null && oldPassword != null) {
-			if (!newPassword.isEmpty() || !oldPassword.isEmpty()) {
-				if (!passwordEncoder.matches(oldPassword, userConnected.getPassword())) {
-					throw new IllegalArgumentException("The old password is not correct");
-				}
-				userConnected.setPassword(passwordEncoder.encode(userUpdateDto.getNewPassword()));
-				
-				
-			}
-		}
 		
-		LOGGER.info("Update the profil"); 
+		updatePassword(userConnected, oldPassword, newPassword);
+		
+		
 		User newUSer = userRepository.save(userConnected);
 		
         //refresh the authentification for take the new email as username authentificate
@@ -106,12 +120,6 @@ public class UserService {
         }
         LOGGER.info("Profil update with success");
         return newUSer;
-			
-		
-		
-		
-		
-		
 	}
 	
 	
@@ -169,12 +177,8 @@ public class UserService {
 		
 	}
 	
-	
 	public Integer updateCapital(String email, Double debit) {
 	    return userRepository.updateCapital(email, debit);
-		
-		
-	
 	}
 	
 	public User deleteConnectionUser(User user, User userToDelete) {
@@ -184,10 +188,8 @@ public class UserService {
 			User currentUser = userOpt.get();
 			currentUser.removeConnectionUser(userToDelete);
 			return userRepository.save(user);
-		}
-		else {
+		} else {
 			throw new UserNotFoundException("The user with the email " +  user.getEmail() + " is not found");
 		}
-		
 	}
 }
