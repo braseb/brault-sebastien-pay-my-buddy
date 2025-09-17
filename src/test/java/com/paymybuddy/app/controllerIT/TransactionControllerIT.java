@@ -1,26 +1,20 @@
 package com.paymybuddy.app.controllerIT;
 
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.hamcrest.Matchers.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-import java.util.Collections;
 import java.util.List;
 
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,7 +25,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.paymybuddy.app.dto.TransactionFormDto;
 import com.paymybuddy.app.model.Transaction;
 import com.paymybuddy.app.model.User;
 import com.paymybuddy.app.projection.TransactionProjection;
@@ -70,6 +63,7 @@ public class TransactionControllerIT {
         john.setUsername("john");
         john.setEmail("john@mail.com");
         john.setPassword(passwordEncoder.encode("secret"));
+        john.setAccountBalance(100);
         userRepository.save(john);
 
         // Utilisateur à ajouter en connexion
@@ -77,6 +71,7 @@ public class TransactionControllerIT {
         alice.setUsername("alice");
         alice.setEmail("alice@mail.com");
         alice.setPassword(passwordEncoder.encode("secret"));
+        alice.setAccountBalance(100);
         userRepository.save(alice);
         
         john.addConnectionUser(alice);
@@ -118,15 +113,16 @@ public class TransactionControllerIT {
     
         mockMvc.perform(post("/transaction")
                             .with(user("john@mail.com"))
-                    .with(csrf()) // CSRF obligatoire
+                            .with(csrf()) // CSRF obligatoire
                             .param("email", "alice@mail.com")
                             .param("description", "test2")
                             .param("amount", "20.0"))
                     .andExpect(status().is3xxRedirection())
                     .andExpect(redirectedUrl("/transaction"));
-        
+               
         User userBdd = userRepository.findByEmail("john@mail.com").orElseThrow();
         
+        assertEquals(80, userBdd.getAccountBalance());
         List<TransactionProjection> saved = transactionRepository.findByUserSenderId(userBdd.getId());
         TransactionProjection savedTx = saved.stream()
                                         .filter(t -> t.getAmount().equals(20.0))
@@ -144,11 +140,11 @@ public class TransactionControllerIT {
     void createTransactionValidationErrors() throws Exception {
         
         mockMvc.perform(post("/transaction")
-                .with(user("john@mail.com"))
-                .with(csrf())
+                        .with(user("john@mail.com"))
+                        .with(csrf())
                         // Missing emailReceiver → devrait générer une erreur de validation
                         .param("description", "")
-                        .param("amount", "0")) // valeur à 0 -> erreur
+                        .param("amount", "0")) //bad amount
                 .andExpect(status().isOk())
                 .andExpect(view().name("transaction"))
                 .andExpect(model().attributeExists("transactions"))
@@ -156,6 +152,25 @@ public class TransactionControllerIT {
                 .andExpect(model().attributeHasFieldErrors("transactionFormDto", "email", "amount"));
 
         
+    }
+    
+ // --- POST /transaction with insufficient account balance
+    @Test
+    @DisplayName("POST /transaction with insufficient account balance should return transaction page and globalError")
+    void createTransactionInsufficientAccountBalanceErrors() throws Exception {
+        
+        mockMvc.perform(post("/transaction")
+                        .with(user("john@mail.com"))
+                        .with(csrf())
+                        .param("email", "alice@mail.com")
+                        .param("description", "")
+                        .param("amount", "101"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/transaction"))
+                .andExpect(flash().attributeExists("globalError"));
+
+        User userBdd = userRepository.findByEmail("john@mail.com").orElseThrow();
+        assertEquals(100, userBdd.getAccountBalance());
     }
     
 }

@@ -8,8 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 
 import com.paymybuddy.app.dto.TransactionFormDto;
 import com.paymybuddy.app.exception.InsufficientAccountBalance;
@@ -18,7 +17,6 @@ import com.paymybuddy.app.model.User;
 import com.paymybuddy.app.projection.TransactionProjection;
 import com.paymybuddy.app.repository.TransactionRepository;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 
 @Service
